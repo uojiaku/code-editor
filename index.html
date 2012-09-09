@@ -48,6 +48,18 @@
 				cursor: pointer;
 			}
 
+      .dialog label {
+				font-family: Arial;
+				font-size: 10px;
+				text-transform: uppercase;
+				text-decoration: none;
+				color: rgba(0,0,0,0.5);
+      }
+
+      .dialog input[type=text] {
+				border: 3px solid rgba(0,0,0,0.25);
+      }
+
 			/**/
 
 			.CodeMirror {
@@ -213,7 +225,7 @@
 			buttonSave.textContent = 'save';
 			buttonSave.addEventListener( 'click', function ( event ) {
 
-				save();
+				openSaveDialog();
 
 			}, false );
 			buttonIO.appendChild( buttonSave );
@@ -255,6 +267,36 @@
 			}, false );
 			toolbar.appendChild( buttonInfo );
 
+      // dialogs
+      var saveDialog = document.createElement( 'div' );
+      saveDialog.className = 'dialog';
+      saveDialog.style.position = 'absolute';
+      saveDialog.style.right = '15px';
+      saveDialog.style.top = '60px';
+      saveDialog.style.display = 'none';
+      document.body.appendChild( saveDialog );
+
+      var saveFileLabel = document.createElement( 'label' );
+      saveFileLabel.textContent = 'Name:';
+      saveDialog.appendChild( saveFileLabel );
+
+      var saveFileField = document.createElement( 'input' );
+      saveFileField.type = 'text';
+      saveFileField.value = documents[ 0 ].filename;
+      saveFileLabel.appendChild( saveFileField );
+
+      var buttonSaveDialog = document.createElement( 'button' );
+      buttonSaveDialog.className = 'button';
+      buttonSaveDialog.textContent = 'Save';
+      buttonSaveDialog.addEventListener( 'click', function ( event ) {
+
+          save(saveFileField.value);
+          saveDialog.style.display = 'none';
+
+      }, false );
+      saveDialog.appendChild( buttonSaveDialog );
+
+
 			// events
 
 			document.addEventListener( 'drop', function ( event ) {
@@ -284,7 +326,7 @@
 				if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
 					event.preventDefault();
-					save();
+					openSaveDialog();
 
 				}
 
@@ -336,9 +378,22 @@
 
 			};
 
-			var save = function () {
+      var openSaveDialog = function() {
+        saveDialog.style.display = '';
+        saveFileField.focus();
+      };
+
+			var save = function (title) {
+
+        if ( documents[ 0 ].filename != title) {
+          documents.unshift({
+            filetype: 'text/plain',
+            autoupdate: documents[ 0 ].autoupdate,
+          });
+        }
 
 				documents[ 0 ].code = code.getValue();
+        documents[ 0 ].filename = title;
 
 				localStorage.codeeditor = JSON.stringify( documents );
 
