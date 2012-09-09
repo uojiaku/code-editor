@@ -60,6 +60,12 @@
 				border: 3px solid rgba(0,0,0,0.25);
       }
 
+      .dialog a {
+				font-family: Arial;
+				font-size: 12px;
+				color: rgba(0,0,0,0.5);
+      }
+
 			/**/
 
 			.CodeMirror {
@@ -237,6 +243,16 @@
 			buttonDownload.textContent = 'download';
 			buttonIO.appendChild( buttonDownload );
 
+			var buttonProjects = document.createElement( 'button' );
+			buttonProjects.className = 'button';
+			buttonProjects.textContent = 'projects';
+			buttonProjects.addEventListener( 'click', function ( event ) {
+
+        openProjectsDialog();
+
+			}, false );
+			buttonIO.appendChild( buttonProjects );
+
 			var buttonShare = document.createElement( 'button' );
 			buttonShare.className = 'button';
 			buttonShare.textContent = 'share';
@@ -377,6 +393,87 @@
 				content.close();
 
 			};
+
+      var openProjectsDialog = function() {
+        closeProjectsDialog();
+
+        var projectsDialog = document.createElement( 'div' );
+        projectsDialog.id = 'projects-dialog';
+        projectsDialog.className = 'dialog';
+  			projectsDialog.style.position = 'absolute';
+			  projectsDialog.style.right = '15px';
+			  projectsDialog.style.top = '60px';
+				projectsDialog.style.border = '1px solid rgba(0,0,0,0.25)';
+        projectsDialog.style.padding = '8px 8px 4px';
+			  document.body.appendChild( projectsDialog );
+
+        documents.forEach(function(doc) {
+          projectsDialog.appendChild(projectsDialogRow(doc));
+        });
+
+        var closeP = document.createElement( 'p' );
+        projectsDialog.appendChild( closeP );
+
+        var closeLink = document.createElement( 'a' );
+        closeLink.href = '#';
+        closeLink.textContent = '[ close ]';
+        closeLink.addEventListener( 'click', function ( event ) {
+
+          closeProjectsDialog();
+          event.stopPropagation();
+   				event.preventDefault();
+
+        }, false );
+        closeP.appendChild( closeLink );
+      };
+
+      var projectsDialogRow = function(doc) {
+        var row = document.createElement( 'p' );
+
+        var link = document.createElement( 'a' );
+        link.href = '#';
+        link.textContent = doc.filename;
+        link.addEventListener( 'click', function ( event ) {
+
+          changeProject(doc.filename);
+          closeProjectsDialog();
+          event.stopPropagation();
+   				event.preventDefault();
+
+        }, false );
+        row.appendChild(link);
+
+        return row;
+      };
+
+      var changeProject = function(filename) {
+        var new_documents = [];
+
+        var i = 0, found;
+        while (i < documents.length) {
+          if (documents[i].filename == filename) {
+            found = documents[i];
+          }
+          else {
+            new_documents.push(documents[i]);
+          }
+          i++;
+        }
+
+        if ( ! found ) return;
+
+        new_documents.unshift(found);
+        documents = new_documents;
+			  code.setValue( documents[ 0 ].code);
+        update();
+      };
+
+      var closeProjectsDialog = function() {
+        var dialog = document.getElementById('projects-dialog');
+        if ( ! dialog ) return;
+
+        dialog.parentElement.removeChild(dialog);
+      };
 
       var openSaveDialog = function() {
         saveDialog.style.display = '';
