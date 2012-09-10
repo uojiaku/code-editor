@@ -5,6 +5,7 @@ CACHE:
 /favicon.ico
 index.html
 files/inconsolata.woff
+js/editor.js
 js/rawdeflate.js
 js/rawinflate.js
 js/codemirror/codemirror.css
