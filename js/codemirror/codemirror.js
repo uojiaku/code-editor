@@ -1,3 +1,21 @@
+// Check if a new cache is available on page load.
+window.addEventListener('load', function(e) {
+
+  window.applicationCache.addEventListener('updateready', function(e) {
+    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+      // Browser downloaded a new app cache.
+      // Swap it in and reload the page to get the new hotness.
+      window.applicationCache.swapCache();
+      if (confirm('A new version of this site is available. Load it?')) {
+        window.location.reload();
+      }
+    } else {
+      // Manifest didn't changed. Nothing new to server.
+    }
+  }, false);
+
+}, false);
+
 // All functions that need access to the editor's state live inside
 // the CodeMirror function. Below that, at the bottom of the file,
 // some utilities are defined.
@@ -1768,7 +1786,7 @@ window.CodeMirror = (function() {
         if (ie_lt9) scrollbar.scrollTop = scrollPos;
         slowPoll();
 
-        // Try to detect the user choosing select-all 
+        // Try to detect the user choosing select-all
         if (input.selectionStart != null) {
           clearTimeout(detectingSelectAll);
           var extval = input.value = " " + (posEq(sel.from, sel.to) ? "" : input.value), i = 0;
