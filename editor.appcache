@@ -1,11 +1,10 @@
 CACHE MANIFEST
-# 2012-09-11:v3
+# 2012-09-11:v4
 
 CACHE:
 /favicon.ico
 /code-editor/
 index.html
-app.html
 files/inconsolata.woff
 js/editor.js
 js/appcache.js
