@@ -1,13 +1,11 @@
 CACHE MANIFEST
-# 2012-09-10:v9
+# 2012-09-11
 
 CACHE:
 /favicon.ico
-/code-editor/
 index.html
 files/inconsolata.woff
 js/editor.js
-js/appcache.js
 js/rawdeflate.js
 js/rawinflate.js
 js/codemirror/codemirror.css
