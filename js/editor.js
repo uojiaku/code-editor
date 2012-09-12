@@ -119,6 +119,7 @@ var shortCodeToolbar = function() {
 var projectToolbar = function() {
   var el = toolbar(
     buttonSave(),
+    buttonShare(),
     buttonDownload(),
     buttonOpen(),
     buttonProjectMenu(),
