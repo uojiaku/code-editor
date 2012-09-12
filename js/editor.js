@@ -102,28 +102,26 @@ var pad = function ( number, length ) {
 };
 
 var codeToolbar = function() {
-  var el = toolbar(
+  toolbar(
     buttonUpdate(),
     buttonHide(),
-    buttonCodeMenu(),
-    buttonInfo()
+    buttonCodeMenu()
   );
 };
 
 var shortCodeToolbar = function() {
-  var el = toolbar(
+  toolbar(
     buttonShow()
   );
 };
 
-var projectToolbar = function() {
-  var el = toolbar(
-    buttonSave(),
-    buttonShare(),
-    buttonDownload(),
-    buttonOpen(),
-    buttonProjectMenu(),
-    buttonInfo()
+var projectMenu = function() {
+  menu(
+    menuOpen(),
+    menuSave(),
+    menuShare(),
+    menuDownload(),
+    menuInfo()
   );
 };
 
@@ -142,6 +140,32 @@ var toolbar = function() {
 
   buttons.forEach(function(button) {
     el.appendChild(button);
+  });
+};
+
+var menu = function() {
+  var items = Array.prototype.slice.apply(arguments);
+
+  var old = document.getElementById('code-editor-menu');
+  if (old) {
+    document.body.removeChild(old);
+    return;
+  }
+
+  var el = document.createElement( 'ul' );
+  el.id = 'code-editor-menu';
+  el.className = 'menu';
+  el.style.position = 'absolute';
+  el.style.right = '17px';
+  el.style.top = '55px';
+  document.body.appendChild( el );
+
+  items.forEach(function(item) {
+    el.appendChild(item);
+  });
+
+  el.addEventListener( 'click', function ( event ) {
+    document.body.removeChild(el);
   });
 };
 
@@ -177,9 +201,8 @@ var buttonUpdate = function() {
   return el;
 };
 
-var buttonSave = function() {
-  var el = document.createElement( 'button' );
-  el.className = 'button';
+var menuSave = function() {
+  var el = document.createElement( 'li' );
   el.textContent = 'save';
   el.addEventListener( 'click', function ( event ) {
 
@@ -190,12 +213,15 @@ var buttonSave = function() {
   return el;
 };
 
-var buttonDownload = function() {
-  var el = document.createElement( 'a' );
-  el.className = 'button';
-  el.download = 'index.html';
-  el.textContent = 'download';
-  el.addEventListener( 'click', function ( event ) {
+var menuDownload = function() {
+  var el = document.createElement( 'li' )
+    , a = document.createElement( 'a' );
+
+  el.appendChild( a );
+
+  a.download = 'index.html';
+  a.textContent = 'download';
+  a.addEventListener( 'click', function ( event ) {
 
     download(event.target);
 
@@ -204,9 +230,8 @@ var buttonDownload = function() {
   return el;
 };
 
-var buttonOpen = function() {
-  var el = document.createElement( 'button' );
-  el.className = 'button';
+var menuOpen = function() {
+  var el = document.createElement( 'li' );
   el.textContent = 'open';
   el.addEventListener( 'click', function ( event ) {
 
@@ -216,9 +241,19 @@ var buttonOpen = function() {
   return el;
 };
 
-var buttonShare = function() {
-  var el = document.createElement( 'button' );
-  el.className = 'button';
+var menuInfo = function() {
+  var el = document.createElement( 'li' );
+  el.textContent = 'Help';
+  el.addEventListener( 'click', function ( event ) {
+
+    window.open( 'https://github.com/mrdoob/code-editor' );
+
+  }, false );
+  return el;
+};
+
+var menuShare = function() {
+  var el = document.createElement( 'li' );
   el.textContent = 'share';
   el.addEventListener( 'click', function ( event ) {
 
@@ -255,11 +290,12 @@ var buttonShow = function() {
 var buttonCodeMenu = function() {
   var el = document.createElement( 'button' );
   el.className = 'button';
-  el.textContent = 'switch menu';
+  el.style.fontWeight = 'bold';
+  el.textContent = '☰';
   el.title = 'Switch to project menu';
   el.addEventListener( 'click', function ( event ) {
 
-  	projectToolbar();
+  	projectMenu();
 
   }, false );
 
@@ -269,7 +305,7 @@ var buttonCodeMenu = function() {
 var buttonProjectMenu = function() {
   var el = document.createElement( 'button' );
   el.className = 'button';
-  el.textContent = 'switch menu';
+  el.textContent = '☰';
   el.title = 'Switch to code menu';
   el.addEventListener( 'click', function ( event ) {
 
@@ -379,9 +415,16 @@ document.addEventListener( 'keydown', function ( event ) {
 
 	}
 
-	if ( event.keyCode === 27 ) {
+	if ( event.keyCode === 27 ) { // ESC
 
-		toggle();
+    if (document.getElementById('code-editor-menu')) {
+      document.body.removeChild(
+        document.getElementById('code-editor-menu')
+      );
+    }
+    else {
+      toggle();
+    }
 
 	}
 
