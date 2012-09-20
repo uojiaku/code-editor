@@ -292,8 +292,16 @@ var buttonCodeMenu = function() {
   el.className = 'button';
   el.style.fontWeight = 'bold';
   el.textContent = '☰';
-  el.title = 'Switch to project menu';
+  el.title = 'Show project menu';
   el.addEventListener( 'click', function ( event ) {
+
+    if (document.getElementById('projects-dialog')) {
+      document.body.removeChild(
+        document.getElementById('projects-dialog')
+      );
+    }
+
+    closeSaveDialog();
 
   	projectMenu();
 
@@ -420,6 +428,11 @@ document.addEventListener( 'keydown', function ( event ) {
     if (document.getElementById('code-editor-menu')) {
       document.body.removeChild(
         document.getElementById('code-editor-menu')
+      );
+    }
+    else if (document.getElementById('projects-dialog')) {
+      document.body.removeChild(
+        document.getElementById('projects-dialog')
       );
     }
     else {
