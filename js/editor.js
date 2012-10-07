@@ -353,52 +353,6 @@ var buttonInfo = function() {
   return el;
 };
 
-// dialogs
-var saveDialog = document.createElement( 'div' );
-saveDialog.className = 'dialog';
-saveDialog.style.position = 'absolute';
-saveDialog.style.right = '15px';
-saveDialog.style.top = '60px';
-saveDialog.style.display = 'none';
-document.body.appendChild( saveDialog );
-
-var saveFileLabel = document.createElement( 'label' );
-saveFileLabel.textContent = 'Name:';
-saveDialog.appendChild( saveFileLabel );
-
-var saveFileField = document.createElement( 'input' );
-saveFileField.type = 'text';
-saveFileField.size = 30;
-saveFileField.value = (documents.length > 0) ? documents[ 0 ].filename : 'Untitled';
-saveFileLabel.appendChild( saveFileField );
-
-var buttonSaveDialog = document.createElement( 'button' );
-buttonSaveDialog.className = 'button';
-buttonSaveDialog.textContent = 'Save';
-buttonSaveDialog.addEventListener( 'click', function ( event ) {
-
-    save(saveFileField.value);
-    closeSaveDialog();
-
-}, false );
-saveDialog.appendChild( buttonSaveDialog );
-
-var closeSaveP = document.createElement( 'p' );
-closeSaveP.className = 'cancel';
-saveDialog.appendChild( closeSaveP );
-
-var closeSaveLink = document.createElement( 'a' );
-closeSaveLink.href = '#';
-closeSaveLink.textContent = '[ close ]';
-closeSaveLink.addEventListener( 'click', function ( event ) {
-
-  closeSaveDialog();
-  event.stopPropagation();
-	event.preventDefault();
-
-}, false );
-closeSaveP.appendChild( closeSaveLink );
-
 
 // events
 
@@ -456,6 +410,11 @@ document.addEventListener( 'keydown', function ( event ) {
         document.getElementById('new-dialog')
       );
     }
+    else if (document.getElementById('save-dialog')) {
+      document.body.removeChild(
+        document.getElementById('save-dialog')
+      );
+    }
     else {
       toggle();
     }
@@ -474,29 +433,8 @@ window.addEventListener( 'resize', function ( event ) {
 
 } );
 
-// actions
 
-var update = function () {
-
-	while ( preview.children.length > 0 ) {
-
-		preview.removeChild( preview.firstChild );
-
-	}
-
-	var iframe = document.createElement( 'iframe' );
-	iframe.style.width = '100%';
-	iframe.style.height = '100%';
-	iframe.style.border = '0';
-	preview.appendChild( iframe );
-
-	var content = iframe.contentDocument || iframe.contentWindow.document;
-
-	content.open();
-	content.write( code.getValue() );
-	content.close();
-
-};
+// dialogs
 
 var openNewDialog = function() {
   var newDialog = document.createElement( 'div' );
@@ -643,6 +581,106 @@ var projectsDialogRow = function(doc) {
   return row;
 };
 
+var closeProjectsDialog = function() {
+  var dialog = document.getElementById('projects-dialog');
+  if ( ! dialog ) return;
+
+  dialog.parentElement.removeChild(dialog);
+};
+
+var openSaveDialog = function() {
+  var saveDialog = document.createElement( 'div' );
+  saveDialog.id = 'save-dialog';
+  saveDialog.className = 'dialog';
+  saveDialog.style.position = 'absolute';
+  saveDialog.style.right = '15px';
+  saveDialog.style.top = '60px';
+	saveDialog.style.border = '1px solid rgba(0,0,0,0.25)';
+  saveDialog.style.padding = '8px 8px 4px';
+  document.body.appendChild( saveDialog );
+
+  var saveFileLabel = document.createElement( 'label' );
+  saveFileLabel.textContent = 'Name:';
+  saveDialog.appendChild( saveFileLabel );
+
+  var saveFileField = document.createElement( 'input' );
+  saveFileField.type = 'text';
+  saveFileField.size = 30;
+  saveFileField.value = documents[0].filename;
+  saveFileLabel.appendChild( saveFileField );
+
+  var buttonSaveDialog = document.createElement( 'button' );
+  buttonSaveDialog.className = 'button';
+  buttonSaveDialog.textContent = 'Save';
+  buttonSaveDialog.addEventListener( 'click', function ( event ) {
+    save(saveFileField.value);
+    closeSaveDialog();
+  }, false );
+  saveDialog.appendChild( buttonSaveDialog );
+
+  var closeSaveP = document.createElement( 'p' );
+  closeSaveP.className = 'cancel';
+  saveDialog.appendChild( closeSaveP );
+
+  var closeSaveLink = document.createElement( 'a' );
+  closeSaveLink.href = '#';
+  closeSaveLink.textContent = '[ close ]';
+  closeSaveLink.addEventListener( 'click', function ( event ) {
+    closeSaveDialog();
+    event.stopPropagation();
+	  event.preventDefault();
+  }, false );
+  closeSaveP.appendChild( closeSaveLink );
+
+  saveFileField.focus();
+};
+
+var closeSaveDialog = function() {
+  var dialog = document.getElementById('save-dialog');
+  if (!dialog) return;
+
+  dialog.parentElement.removeChild(dialog);
+};
+
+// actions
+
+var save = function (title) {
+
+  if ( documents[ 0 ].filename != title) {
+    documents.unshift({
+      filetype: 'text/plain',
+      autoupdate: documents[ 0 ].autoupdate
+    });
+  }
+
+	documents[ 0 ].code = code.getValue();
+  documents[ 0 ].filename = title;
+
+	localStorage.codeeditor = JSON.stringify( documents );
+};
+
+var update = function () {
+
+	while ( preview.children.length > 0 ) {
+
+		preview.removeChild( preview.firstChild );
+
+	}
+
+	var iframe = document.createElement( 'iframe' );
+	iframe.style.width = '100%';
+	iframe.style.height = '100%';
+	iframe.style.border = '0';
+	preview.appendChild( iframe );
+
+	var content = iframe.contentDocument || iframe.contentWindow.document;
+
+	content.open();
+	content.write( code.getValue() );
+	content.close();
+
+};
+
 var changeProject = function(filename) {
   var new_documents = [];
 
@@ -663,38 +701,6 @@ var changeProject = function(filename) {
   documents = new_documents;
   code.setValue( documents[ 0 ].code);
   update();
-};
-
-var closeProjectsDialog = function() {
-  var dialog = document.getElementById('projects-dialog');
-  if ( ! dialog ) return;
-
-  dialog.parentElement.removeChild(dialog);
-};
-
-var openSaveDialog = function() {
-  saveDialog.style.display = '';
-  saveFileField.value = documents.length > 0 ? documents[ 0 ].filename : 'Untitled';
-  saveFileField.focus();
-};
-
-var closeSaveDialog = function() {
-  saveDialog.style.display = 'none';
-};
-
-var save = function (title) {
-
-  if ( documents[ 0 ].filename != title) {
-    documents.unshift({
-      filetype: 'text/plain',
-      autoupdate: documents[ 0 ].autoupdate
-    });
-  }
-
-	documents[ 0 ].code = code.getValue();
-  documents[ 0 ].filename = title;
-
-	localStorage.codeeditor = JSON.stringify( documents );
 };
 
 var download = function(el) {
