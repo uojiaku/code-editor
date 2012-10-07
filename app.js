@@ -1,26 +1,14 @@
-
-/**
- * Module dependencies.
- */
-
-var express = require('express');
-
-var app = module.exports = express.createServer();
-
-// Configuration
+var express = require('express')
+  , app = express.createServer();
 
 app.configure(function(){
   app.use(express.static(__dirname));
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
-
 app.listen(3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+  console.log(
+    "Express server listening on port %d in %s mode",
+    app.address().port,
+    app.settings.env
+  );
 });
