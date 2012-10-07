@@ -440,11 +440,6 @@ var openNewDialog = function() {
   var newDialog = document.createElement( 'div' );
   newDialog.id = 'new-dialog';
   newDialog.className = 'dialog';
-	newDialog.style.position = 'absolute';
-  newDialog.style.right = '15px';
-  newDialog.style.top = '60px';
-	newDialog.style.border = '1px solid rgba(0,0,0,0.25)';
-  newDialog.style.padding = '8px 8px 4px';
   document.body.appendChild( newDialog );
 
   var newFileLabel = document.createElement( 'label' );
@@ -534,11 +529,6 @@ var openProjectsDialog = function() {
   var projectsDialog = document.createElement( 'div' );
   projectsDialog.id = 'projects-dialog';
   projectsDialog.className = 'dialog';
-	projectsDialog.style.position = 'absolute';
-  projectsDialog.style.right = '15px';
-  projectsDialog.style.top = '60px';
-	projectsDialog.style.border = '1px solid rgba(0,0,0,0.25)';
-  projectsDialog.style.padding = '8px 8px 4px';
   document.body.appendChild( projectsDialog );
 
   documents.forEach(function(doc) {
@@ -592,11 +582,6 @@ var openSaveDialog = function() {
   var saveDialog = document.createElement( 'div' );
   saveDialog.id = 'save-dialog';
   saveDialog.className = 'dialog';
-  saveDialog.style.position = 'absolute';
-  saveDialog.style.right = '15px';
-  saveDialog.style.top = '60px';
-	saveDialog.style.border = '1px solid rgba(0,0,0,0.25)';
-  saveDialog.style.padding = '8px 8px 4px';
   document.body.appendChild( saveDialog );
 
   var saveFileLabel = document.createElement( 'label' );
