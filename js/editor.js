@@ -17,7 +17,7 @@ var encode = function ( string ) {
 
 //
 
-var documents = [ {
+var templates = [ {
 	filename: '3D starter project',
 	filetype: 'text/plain',
 	autoupdate: true,
@@ -34,11 +34,10 @@ var documents = [ {
 	code: decode( "jVRha9swEP28/ArRL1WHUdRCGMRpYfPSZWOF0RT2WbMusYYteSclTlr63yfZchYvGcwYx7577+np7pTZDyP3d7Nx+zOa2RxV7YjF/PaicK6ejsdrUSm9/rJkuanGTwUCsJ/2wlM67H+QsgJNBfdqB/Y89W5EyFYgyUUFKBJic9CQEAQtAQHTmF6Dl3G4T0glHKASpX8DW6QjD1BaOXoVoEKrkA8f/mu10blTRkcAefEx0q1AbomGhjwtHudztgyRyOmWE7aG3HlQo7Q0DVNaA35X0hVkPIgtQK0Ll7bEbgsD5W+ArZLaQtZm6btJEtUTcu1vzvnVMZ3Vxqpgmj17pQnn6ehN65gJKWmHiYT20RdmsOzn3FhRgESjP8U8veHcLxepfREHrAdfzw/CqvwhZmlXMG/NlAanhO94eyUkxhuFsELvaUocbuA0/lV5+VC2Kbnpkq99mUP3Tpanp32Ojv/UIBB7kX5MBkKZ0FthH2OKRoEeyiy4rASBWdjUAnaU71btdQa4VM9AT2YgOTMCvSNp8k0F2rFwqph1+xJYJXCttPfI039izBZwVZrGoy4LJSXoy3NgUdfeXlaoUtKDUWmqeQkB1G7hdTD7hyMRxx/h1wase9+GPeA+9IlG1HFzGBrXItjOm/ros0ybxuu8JZz5KZikZ6D7c9Drv7rFuhcaz/rRUL+ODn8QvwE=" )
 } ];
 
-if ( localStorage.codeeditor !== undefined ) {
 
-	documents = JSON.parse( localStorage.codeeditor );
-
-}
+var documents = ( localStorage.codeeditor !== undefined ) ?
+	JSON.parse( localStorage.codeeditor ) :
+  [templates[templates.length-1]];
 
 if ( window.location.hash ) {
 
@@ -73,7 +72,7 @@ var interval;
 
 var code = CodeMirror( document.body, {
 
-	value: documents[ 0 ].code,
+	value: (documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code,
 	mode: "text/html",
 	lineNumbers: true,
 	matchBrackets: true,
@@ -122,6 +121,7 @@ var shortCodeToolbar = function() {
 
 var projectMenu = function() {
   menu(
+    menuNew(),
     menuOpen(),
     menuSave(),
     menuShare(),
@@ -181,7 +181,7 @@ var buttonUpdate = function() {
   var checkbox = document.createElement( 'input' );
   checkbox.type = 'checkbox';
 
-  if ( documents[ 0 ].autoupdate === true ) checkbox.checked = true;
+  if ( documents.length == 0 || documents[ 0 ].autoupdate === true ) checkbox.checked = true;
 
   checkbox.style.margin = '-4px 4px -4px 0px';
   checkbox.addEventListener( 'click', function ( event ) {
@@ -232,6 +232,17 @@ var menuDownload = function() {
 
   }, false );
 
+  return el;
+};
+
+var menuNew = function() {
+  var el = document.createElement( 'li' );
+  el.textContent = 'new';
+  el.addEventListener( 'click', function ( event ) {
+
+    openNewDialog();
+
+  }, false );
   return el;
 };
 
@@ -358,7 +369,7 @@ saveDialog.appendChild( saveFileLabel );
 var saveFileField = document.createElement( 'input' );
 saveFileField.type = 'text';
 saveFileField.size = 30;
-saveFileField.value = documents[ 0 ].filename;
+saveFileField.value = (documents.length > 0) ? documents[ 0 ].filename : 'Untitled';
 saveFileLabel.appendChild( saveFileField );
 
 var buttonSaveDialog = document.createElement( 'button' );
@@ -440,6 +451,11 @@ document.addEventListener( 'keydown', function ( event ) {
         document.getElementById('projects-dialog')
       );
     }
+    else if (document.getElementById('new-dialog')) {
+      document.body.removeChild(
+        document.getElementById('new-dialog')
+      );
+    }
     else {
       toggle();
     }
@@ -480,6 +496,98 @@ var update = function () {
 	content.write( code.getValue() );
 	content.close();
 
+};
+
+var openNewDialog = function() {
+  var newDialog = document.createElement( 'div' );
+  newDialog.id = 'new-dialog';
+  newDialog.className = 'dialog';
+	newDialog.style.position = 'absolute';
+  newDialog.style.right = '15px';
+  newDialog.style.top = '60px';
+	newDialog.style.border = '1px solid rgba(0,0,0,0.25)';
+  newDialog.style.padding = '8px 8px 4px';
+  document.body.appendChild( newDialog );
+
+  var newFileLabel = document.createElement( 'label' );
+  newFileLabel.textContent = 'Name:';
+  newDialog.appendChild( newFileLabel );
+
+  var newFileField = document.createElement( 'input' );
+  newFileField.type = 'text';
+  newFileField.size = 30;
+  newFileLabel.appendChild( newFileField );
+
+  var buttonNewDialog = document.createElement( 'button' );
+  buttonNewDialog.className = 'button';
+  buttonNewDialog.textContent = 'Save';
+  buttonNewDialog.addEventListener( 'click', function ( event ) {
+    createProject(newFileField.value, templateField.value);
+    closeNewDialog();
+  }, false );
+  newDialog.appendChild( buttonNewDialog );
+
+  var templateDiv = document.createElement( 'div' );
+  newDialog.appendChild( templateDiv );
+
+  var templateLabel = document.createElement( 'label' );
+  templateLabel.textContent = 'Template:';
+  templateDiv.appendChild( templateLabel );
+
+  var templateField = document.createElement( 'select' );
+  templateLabel.appendChild(templateField);
+  templates.forEach(function(template) {
+    var optionField = document.createElement( 'option' );
+    optionField.textContent = template.filename;
+    templateField.appendChild(optionField);
+  });
+
+  var closeNewP = document.createElement( 'p' );
+  closeNewP.className = 'cancel';
+  newDialog.appendChild( closeNewP );
+
+  var closeNewLink = document.createElement( 'a' );
+  closeNewLink.href = '#';
+  closeNewLink.textContent = '[ close ]';
+  closeNewLink.addEventListener( 'click', function ( event ) {
+
+    closeNewDialog();
+    event.stopPropagation();
+	  event.preventDefault();
+
+  }, false );
+  closeNewP.appendChild( closeNewLink );
+
+  newFileField.focus();
+};
+
+var createProject = function(name, template_name) {
+  if (documents.length == 0 || documents[0].filename != name) {
+    documents.unshift({
+      filetype: 'text/plain',
+      autoupdate: documents[0].autoupdate
+    });
+  }
+
+  var code = templates.
+    reduce(function(code, template) {
+      if (template.filename == template_name) return template.code;
+      return code;
+    }, undefined);
+
+	documents[0].code = code;
+  documents[0].filename = name;
+
+	localStorage.codeeditor = JSON.stringify(documents);
+
+  changeProject(name);
+};
+
+var closeNewDialog = function() {
+  var dialog = document.getElementById('new-dialog');
+  if ( ! dialog ) return;
+
+  dialog.parentElement.removeChild(dialog);
 };
 
 var openProjectsDialog = function() {
@@ -566,7 +674,7 @@ var closeProjectsDialog = function() {
 
 var openSaveDialog = function() {
   saveDialog.style.display = '';
-  saveFileField.value = documents[ 0 ].filename;
+  saveFileField.value = documents.length > 0 ? documents[ 0 ].filename : 'Untitled';
   saveFileField.focus();
 };
 
