@@ -423,6 +423,18 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
+function disappearingCodeFix() {
+  var code_mirror = document.getElementsByClassName('CodeMirror-lines')[0]
+    , divs = code_mirror.children[0].children
+    , code_div = divs[divs.length-1];
+
+  code_div.style.display = 'none';
+  code_div.offsetHeight;
+  code_div.style.display = 'block';
+}
+
+setInterval(disappearingCodeFix, 800);
+
 window.addEventListener( 'resize', function ( event ) {
 
 	codeElement.style.width = window.innerWidth + 'px';
