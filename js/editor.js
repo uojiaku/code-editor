@@ -701,27 +701,29 @@ var changeProject = function(filename) {
 };
 
 var download = function(el) {
-	var blob = new Blob( [ code.getValue() ], { type: documents[ 0 ].filetype } );
-	var objectURL = URL.createObjectURL( blob );
+  var blob = new Blob( [ code.getValue() ], { type: documents[ 0 ].filetype } );
+  var objectURL = URL.createObjectURL( blob );
 
-	el.href = objectURL;
+  el.href = objectURL;
 
-	el.download = documents[ 0 ].filename;
+  el.download = documents[ 0 ].filename;
 };
 
 var toggle = function () {
 
-	if ( codeElement.style.display === '' ) {
+  if ( codeElement.style.display === '' ) {
 
     shortCodeToolbar();
-		codeElement.style.display = 'none';
+    codeElement.style.display = 'none';
+    preview.children[0].focus();
 
-	} else {
+  } else {
 
     codeToolbar();
-		codeElement.style.display = '';
+    codeElement.style.display = '';
+    code.focus();
 
-	}
+  }
 
 };
 
