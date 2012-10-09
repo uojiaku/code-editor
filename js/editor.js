@@ -5,54 +5,54 @@ window.URL = window.URL || window.webkitURL;
 
 var decode = function ( string ) {
 
-	return RawDeflate.inflate( window.atob( string ) );
+  return RawDeflate.inflate( window.atob( string ) );
 
 };
 
 var encode = function ( string ) {
 
-	return window.btoa( RawDeflate.deflate( string ) );
+  return window.btoa( RawDeflate.deflate( string ) );
 
 };
 
 //
 
 var templates = [ {
-	filename: '3D starter project',
-	filetype: 'text/plain',
-	autoupdate: true,
+  filename: '3D starter project',
+  filetype: 'text/plain',
+  autoupdate: true,
   code: decode( "jVJdS8MwFH3fr7j41ElJ58MQ5hSk1i+kk7WgbxKb6xJpk5Jkq/rrTdOu0KngJdCQe8/pOSdZvir2ebGM/GeyNIUWtQWji/Mjbm29iKINrYTc3GekUFWUc41I3s2Rg3Sz/wDFXKsKr8UHmt+hFxOAKIKcCwNuNRw1grHbtzcQEtRWg+NDaERZAqd1jXLhEDuqwRQoEc5BYgP57TpJSNaeBNOzySEndQoRDVjec+85qKmxsC+aWqEcVSMkUw0RUqJ+EsxyiEZntyg23J714MIJ03Sk4BG1ZxQ7jH03OJ2Ho7+EcOLWzNW05ek4SK2McE1JvhzdfDZrW94foYwF3dDYlw+Eadp09lpnvR7vVEmrOruFu7UhM42SuYD1SHRM5Y6add8KvK79IDFoM/GFwY9owl+S8VCmim2F0pL2XRF/ZSzmomTBQMpUlZTYDg2mjvuCLL9c5xCvru7SG1ilTmMCafKcw8Ndmgxjk7Y8MFVNCIarP4M4iGEQ0W0CH3MIQ8bDC/0G" )
 }, {
-	filename: 'Empty project',
-	filetype: 'text/plain',
-	autoupdate: true,
-	code: decode( "s0nKT6m0s9EHU1w2xclFmQUlCsVFybZKGSUlBVb6+umJuZl56V7Besn5ufohGUWpqXpZxUpALRC1RGhyzijKz011y6xILcau1Y5LQUFfXyEyv7RIITk/JVUhPT+1WCEjtShVT0+PC64cAA==" )
+  filename: 'Empty project',
+  filetype: 'text/plain',
+  autoupdate: true,
+  code: decode( "s0nKT6m0s9EHU1w2xclFmQUlCsVFybZKGSUlBVb6+umJuZl56V7Besn5ufohGUWpqXpZxUpALRC1RGhyzijKz011y6xILcau1Y5LQUFfXyEyv7RIITk/JVUhPT+1WCEjtShVT0+PC64cAA==" )
 }, {
-	filename: 'Spinning Multi-Sided Thingy',
-	filetype: 'text/plain',
-	autoupdate: true,
-	code: decode( "jVRha9swEP28/ArRL1WHUdRCGMRpYfPSZWOF0RT2WbMusYYteSclTlr63yfZchYvGcwYx7577+np7pTZDyP3d7Nx+zOa2RxV7YjF/PaicK6ejsdrUSm9/rJkuanGTwUCsJ/2wlM67H+QsgJNBfdqB/Y89W5EyFYgyUUFKBJic9CQEAQtAQHTmF6Dl3G4T0glHKASpX8DW6QjD1BaOXoVoEKrkA8f/mu10blTRkcAefEx0q1AbomGhjwtHudztgyRyOmWE7aG3HlQo7Q0DVNaA35X0hVkPIgtQK0Ll7bEbgsD5W+ArZLaQtZm6btJEtUTcu1vzvnVMZ3Vxqpgmj17pQnn6ehN65gJKWmHiYT20RdmsOzn3FhRgESjP8U8veHcLxepfREHrAdfzw/CqvwhZmlXMG/NlAanhO94eyUkxhuFsELvaUocbuA0/lV5+VC2Kbnpkq99mUP3Tpanp32Ojv/UIBB7kX5MBkKZ0FthH2OKRoEeyiy4rASBWdjUAnaU71btdQa4VM9AT2YgOTMCvSNp8k0F2rFwqph1+xJYJXCttPfI039izBZwVZrGoy4LJSXoy3NgUdfeXlaoUtKDUWmqeQkB1G7hdTD7hyMRxx/h1wase9+GPeA+9IlG1HFzGBrXItjOm/ros0ybxuu8JZz5KZikZ6D7c9Drv7rFuhcaz/rRUL+ODn8QvwE=" )
+  filename: 'Spinning Multi-Sided Thingy',
+  filetype: 'text/plain',
+  autoupdate: true,
+  code: decode( "jVRha9swEP28/ArRL1WHUdRCGMRpYfPSZWOF0RT2WbMusYYteSclTlr63yfZchYvGcwYx7577+np7pTZDyP3d7Nx+zOa2RxV7YjF/PaicK6ejsdrUSm9/rJkuanGTwUCsJ/2wlM67H+QsgJNBfdqB/Y89W5EyFYgyUUFKBJic9CQEAQtAQHTmF6Dl3G4T0glHKASpX8DW6QjD1BaOXoVoEKrkA8f/mu10blTRkcAefEx0q1AbomGhjwtHudztgyRyOmWE7aG3HlQo7Q0DVNaA35X0hVkPIgtQK0Ll7bEbgsD5W+ArZLaQtZm6btJEtUTcu1vzvnVMZ3Vxqpgmj17pQnn6ehN65gJKWmHiYT20RdmsOzn3FhRgESjP8U8veHcLxepfREHrAdfzw/CqvwhZmlXMG/NlAanhO94eyUkxhuFsELvaUocbuA0/lV5+VC2Kbnpkq99mUP3Tpanp32Ojv/UIBB7kX5MBkKZ0FthH2OKRoEeyiy4rASBWdjUAnaU71btdQa4VM9AT2YgOTMCvSNp8k0F2rFwqph1+xJYJXCttPfI039izBZwVZrGoy4LJSXoy3NgUdfeXlaoUtKDUWmqeQkB1G7hdTD7hyMRxx/h1wase9+GPeA+9IlG1HFzGBrXItjOm/ros0ybxuu8JZz5KZikZ6D7c9Drv7rFuhcaz/rRUL+ODn8QvwE=" )
 } ];
 
 
 var documents = ( localStorage.codeeditor !== undefined ) ?
-	JSON.parse( localStorage.codeeditor ) :
+  JSON.parse( localStorage.codeeditor ) :
   [templates[templates.length-1]];
 
 if ( window.location.hash ) {
 
-	var hash = window.location.hash.substr( 1 );
-	var version = hash.substr( 0, 2 );
+  var hash = window.location.hash.substr( 1 );
+  var version = hash.substr( 0, 2 );
 
-	if ( version == 'A/' ) {
+  if ( version == 'A/' ) {
 
-		alert( 'That shared link format is no longer supported.' );
+    alert( 'That shared link format is no longer supported.' );
 
-	} else if ( version == 'B/' ) {
+  } else if ( version == 'B/' ) {
 
-		documents[ 0 ].code = decode( hash.substr( 2 ) );
+    documents[ 0 ].code = decode( hash.substr( 2 ) );
 
-	}
+  }
 
 }
 
@@ -72,19 +72,20 @@ var interval;
 
 var code = CodeMirror( document.body, {
 
-	value: (documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code,
-	mode: "text/html",
-	lineNumbers: true,
-	matchBrackets: true,
+  value: (documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code,
+  mode: "text/html",
+  lineNumbers: true,
+  matchBrackets: true,
 
-	onChange: function () {
+  onChange: function () {
+    save();
 
-		if ( documents[ 0 ].autoupdate === false ) return;
+    if ( documents[ 0 ].autoupdate === false ) return;
 
-		clearTimeout( interval );
-		interval = setTimeout( update, 300 );
+    clearTimeout( interval );
+    interval = setTimeout( update, 300 );
 
-	}
+  }
 
 } );
 
@@ -98,10 +99,10 @@ document.body.appendChild( codeElement );
 
 var pad = function ( number, length ) {
 
-	var string = number.toString();
+  var string = number.toString();
 
-	while ( string.length < length ) string = '0' + string;
-	return string;
+  while ( string.length < length ) string = '0' + string;
+  return string;
 
 };
 
@@ -188,9 +189,9 @@ var buttonUpdate = function() {
 
     event.stopPropagation();
 
-	  documents[ 0 ].autoupdate = documents[ 0 ].autoupdate === false;
+    documents[ 0 ].autoupdate = documents[ 0 ].autoupdate === false;
 
-	  localStorage.codeeditor = JSON.stringify( documents );
+    localStorage.codeeditor = JSON.stringify( documents );
 
   }, false );
 
@@ -285,7 +286,7 @@ var buttonHide = function() {
   el.textContent = 'hide code';
   el.addEventListener( 'click', function ( event ) {
 
-  	toggle();
+    toggle();
 
   }, false );
   return el;
@@ -297,7 +298,7 @@ var buttonShow = function() {
   el.textContent = 'show code';
   el.addEventListener( 'click', function ( event ) {
 
-  	toggle();
+    toggle();
 
   }, false );
   return el;
@@ -319,7 +320,7 @@ var buttonCodeMenu = function() {
 
     closeSaveDialog();
 
-  	projectMenu();
+    projectMenu();
 
   }, false );
 
@@ -333,7 +334,7 @@ var buttonProjectMenu = function() {
   el.title = 'Switch to code menu';
   el.addEventListener( 'click', function ( event ) {
 
-  	codeToolbar();
+    codeToolbar();
 
   }, false );
 
@@ -358,42 +359,42 @@ var buttonInfo = function() {
 
 document.addEventListener( 'drop', function ( event ) {
 
-	event.preventDefault();
-	event.stopPropagation();
+  event.preventDefault();
+  event.stopPropagation();
 
-	var file = event.dataTransfer.files[ 0 ];
+  var file = event.dataTransfer.files[ 0 ];
 
-	documents[ 0 ].filename = file.name;
-	documents[ 0 ].filetype = file.type;
+  documents[ 0 ].filename = file.name;
+  documents[ 0 ].filetype = file.type;
 
-	var reader = new FileReader();
+  var reader = new FileReader();
 
-	reader.onload = function ( event ) {
+  reader.onload = function ( event ) {
 
-		code.setValue( event.target.result );
+    code.setValue( event.target.result );
 
-	};
+  };
 
-	reader.readAsText( file );
+  reader.readAsText( file );
 
 }, false );
 
 document.addEventListener( 'keydown', function ( event ) {
 
-	if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
+  if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
-		event.preventDefault();
-		openSaveDialog();
+    event.preventDefault();
+    openSaveDialog();
 
-	}
+  }
 
-	if ( event.keyCode === 13 && ( event.ctrlKey === true || event.metaKey === true ) ) {
+  if ( event.keyCode === 13 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
-		update();
+    update();
 
-	}
+  }
 
-	if ( event.keyCode === 27 ) { // ESC
+  if ( event.keyCode === 27 ) { // ESC
 
     if (document.getElementById('code-editor-menu')) {
       document.body.removeChild(
@@ -419,7 +420,7 @@ document.addEventListener( 'keydown', function ( event ) {
       toggle();
     }
 
-	}
+  }
 
 }, false );
 
@@ -437,11 +438,11 @@ setInterval(disappearingCodeFix, 800);
 
 window.addEventListener( 'resize', function ( event ) {
 
-	codeElement.style.width = window.innerWidth + 'px';
-	codeElement.style.height = window.innerHeight + 'px';
+  codeElement.style.width = window.innerWidth + 'px';
+  codeElement.style.height = window.innerHeight + 'px';
 
-	preview.style.width = window.innerWidth + 'px';
-	preview.style.height = window.innerHeight + 'px';
+  preview.style.width = window.innerWidth + 'px';
+  preview.style.height = window.innerHeight + 'px';
 
 } );
 
@@ -498,7 +499,7 @@ var openNewDialog = function() {
 
     closeNewDialog();
     event.stopPropagation();
-	  event.preventDefault();
+    event.preventDefault();
 
   }, false );
   closeNewP.appendChild( closeNewLink );
@@ -520,10 +521,10 @@ var createProject = function(name, template_name) {
       return code;
     }, undefined);
 
-	documents[0].code = code;
+  documents[0].code = code;
   documents[0].filename = name;
 
-	localStorage.codeeditor = JSON.stringify(documents);
+  localStorage.codeeditor = JSON.stringify(documents);
 
   changeProject(name);
 };
@@ -558,7 +559,7 @@ var openProjectsDialog = function() {
 
     closeProjectsDialog();
     event.stopPropagation();
-		event.preventDefault();
+    event.preventDefault();
 
   }, false );
   closeP.appendChild( closeLink );
@@ -575,7 +576,7 @@ var projectsDialogRow = function(doc) {
     changeProject(doc.filename);
     closeProjectsDialog();
     event.stopPropagation();
-		event.preventDefault();
+    event.preventDefault();
 
   }, false );
   row.appendChild(link);
@@ -610,7 +611,7 @@ var openSaveDialog = function() {
   buttonSaveDialog.className = 'button';
   buttonSaveDialog.textContent = 'Save';
   buttonSaveDialog.addEventListener( 'click', function ( event ) {
-    save(saveFileField.value);
+    saveAs(saveFileField.value);
     closeSaveDialog();
   }, false );
   saveDialog.appendChild( buttonSaveDialog );
@@ -625,7 +626,7 @@ var openSaveDialog = function() {
   closeSaveLink.addEventListener( 'click', function ( event ) {
     closeSaveDialog();
     event.stopPropagation();
-	  event.preventDefault();
+    event.preventDefault();
   }, false );
   closeSaveP.appendChild( closeSaveLink );
 
@@ -641,7 +642,7 @@ var closeSaveDialog = function() {
 
 // actions
 
-var save = function (title) {
+var saveAs = function (title) {
 
   if ( documents[ 0 ].filename != title) {
     documents.unshift({
@@ -650,31 +651,36 @@ var save = function (title) {
     });
   }
 
-	documents[ 0 ].code = code.getValue();
+  documents[ 0 ].code = code.getValue();
   documents[ 0 ].filename = title;
 
-	localStorage.codeeditor = JSON.stringify( documents );
+  localStorage.codeeditor = JSON.stringify( documents );
+};
+
+var save = function() {
+  documents[ 0 ].code = code.getValue();
+  localStorage.codeeditor = JSON.stringify( documents );
 };
 
 var update = function () {
 
-	while ( preview.children.length > 0 ) {
+  while ( preview.children.length > 0 ) {
 
-		preview.removeChild( preview.firstChild );
+    preview.removeChild( preview.firstChild );
 
-	}
+  }
 
-	var iframe = document.createElement( 'iframe' );
-	iframe.style.width = '100%';
-	iframe.style.height = '100%';
-	iframe.style.border = '0';
-	preview.appendChild( iframe );
+  var iframe = document.createElement( 'iframe' );
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = '0';
+  preview.appendChild( iframe );
 
-	var content = iframe.contentDocument || iframe.contentWindow.document;
+  var content = iframe.contentDocument || iframe.contentWindow.document;
 
-	content.open();
-	content.write( code.getValue() );
-	content.close();
+  content.open();
+  content.write( code.getValue() );
+  content.close();
 
 };
 
