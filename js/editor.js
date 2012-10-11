@@ -70,30 +70,33 @@ document.body.appendChild( preview );
 
 var interval;
 
-var code = CodeMirror( document.body, {
+var editor = document.createElement( 'div' );
+editor.id = "editor";
+editor.style.position = 'absolute';
+editor.style.left = '0px';
+editor.style.top = '0px';
+editor.style.width = window.innerWidth + 'px';
+editor.style.height = window.innerHeight + 'px';
+document.body.appendChild( editor );
 
-  value: (documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code,
-  mode: "text/html",
-  lineNumbers: true,
-  matchBrackets: true,
+var ace = ace.edit("editor");
+ace.setTheme("ace/theme/chrome");
+ace.getSession().setMode("ace/mode/html");
+ace.getSession().setUseWrapMode(true);
+ace.getSession().setUseSoftTabs(true);
+ace.setPrintMarginColumn(false);
+ace.setFontSize('18px');
+var emacs = require("ace/keyboard/emacs").handler;
+ace.setKeyboardHandler(emacs);
+ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
+ace.getSession().on( "change", function () {
+  save();
 
-  onChange: function () {
-    save();
+  if ( documents[ 0 ].autoupdate === false ) return;
 
-    if ( documents[ 0 ].autoupdate === false ) return;
-
-    clearTimeout( interval );
-    interval = setTimeout( update, 300 );
-
-  }
-
-} );
-
-var codeElement = code.getWrapperElement();
-codeElement.style.position = 'absolute';
-codeElement.style.width = window.innerWidth + 'px';
-codeElement.style.height = window.innerHeight + 'px';
-document.body.appendChild( codeElement );
+  clearTimeout( interval );
+  interval = setTimeout( update, 300 );
+});
 
 // toolbar
 
@@ -274,7 +277,7 @@ var menuShare = function() {
   el.textContent = 'share';
   el.addEventListener( 'click', function ( event ) {
 
-    window.location.replace( '#B/' + encode( code.getValue() ) );
+    window.location.replace( '#B/' + encode( ace.getValue() ) );
 
   }, false );
   return el;
@@ -371,7 +374,7 @@ document.addEventListener( 'drop', function ( event ) {
 
   reader.onload = function ( event ) {
 
-    code.setValue( event.target.result );
+    ace.setValue( event.target.result, -1 );
 
   };
 
@@ -424,22 +427,10 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
-function disappearingCodeFix() {
-  var code_mirror = document.getElementsByClassName('CodeMirror-lines')[0]
-    , divs = code_mirror.children[0].children
-    , code_div = divs[divs.length-1];
-
-  code_div.style.display = 'none';
-  code_div.offsetHeight;
-  code_div.style.display = 'block';
-}
-
-setInterval(disappearingCodeFix, 800);
-
 window.addEventListener( 'resize', function ( event ) {
 
-  codeElement.style.width = window.innerWidth + 'px';
-  codeElement.style.height = window.innerHeight + 'px';
+  editor.style.width = window.innerWidth + 'px';
+  editor.style.height = window.innerHeight + 'px';
 
   preview.style.width = window.innerWidth + 'px';
   preview.style.height = window.innerHeight + 'px';
@@ -651,14 +642,14 @@ var saveAs = function (title) {
     });
   }
 
-  documents[ 0 ].code = code.getValue();
+  documents[ 0 ].code = ace.getValue();
   documents[ 0 ].filename = title;
 
   localStorage.codeeditor = JSON.stringify( documents );
 };
 
 var save = function() {
-  documents[ 0 ].code = code.getValue();
+  documents[ 0 ].code = ace.getValue();
   localStorage.codeeditor = JSON.stringify( documents );
 };
 
@@ -679,9 +670,10 @@ var update = function () {
   var content = iframe.contentDocument || iframe.contentWindow.document;
 
   content.open();
-  content.write( code.getValue() );
+  content.write( ace.getValue() );
   content.close();
 
+  content.body.style.margin = '0';
 };
 
 var changeProject = function(filename) {
@@ -702,12 +694,12 @@ var changeProject = function(filename) {
 
   new_documents.unshift(found);
   documents = new_documents;
-  code.setValue( documents[ 0 ].code);
+  ace.setValue( documents[ 0 ].code, -1 );
   update();
 };
 
 var download = function(el) {
-  var blob = new Blob( [ code.getValue() ], { type: documents[ 0 ].filetype } );
+  var blob = new Blob( [ ace.getValue() ], { type: documents[ 0 ].filetype } );
   var objectURL = URL.createObjectURL( blob );
 
   el.href = objectURL;
@@ -717,17 +709,17 @@ var download = function(el) {
 
 var toggle = function () {
 
-  if ( codeElement.style.display === '' ) {
+  if ( editor.style.display === '' ) {
 
     shortCodeToolbar();
-    codeElement.style.display = 'none';
+    editor.style.display = 'none';
     preview.children[0].focus();
 
   } else {
 
     codeToolbar();
-    codeElement.style.display = '';
-    code.focus();
+    editor.style.display = '';
+    ace.focus();
 
   }
 

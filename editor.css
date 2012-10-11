@@ -93,18 +93,19 @@ ul.menu li {
 
 /**/
 
-.CodeMirror {
+#editor {
 	font-family: inconsolata;
-	background-color: rgba(255,255,255,0.75);
+	background-color: rgba(255,255,255,0.0);
 }
 
-.CodeMirror-scroll {
-	height: 100%;
-}
-
-div.CodeMirror-selected {
-	background: rgba(0,0,0,0.1);
-}
-.CodeMirror-focused div.CodeMirror-selected {
+#editor .ace_selection {
 	background: rgba(0,0,255,0.1);
+}
+
+#editor .ace_content {
+	background: rgba(255,255,255,0.75);
+}
+
+#editor .ace_scroller {
+  background-color: rgba(255,255,255,0.0);
 }
