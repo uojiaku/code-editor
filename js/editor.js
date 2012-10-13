@@ -85,10 +85,15 @@ ace.getSession().setMode("ace/mode/html");
 ace.getSession().setUseWrapMode(true);
 ace.getSession().setUseSoftTabs(true);
 ace.setPrintMarginColumn(false);
+ace.setDisplayIndentGuides(false);
 ace.setFontSize('18px');
 var emacs = require("ace/keyboard/emacs").handler;
 ace.setKeyboardHandler(emacs);
 ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
+
+var UndoManager = require("ace/undomanager").UndoManager;
+ace.getSession().setUndoManager(new UndoManager());
+
 ace.getSession().on( "change", function () {
   save();
 
@@ -375,6 +380,7 @@ document.addEventListener( 'drop', function ( event ) {
   reader.onload = function ( event ) {
 
     ace.setValue( event.target.result, -1 );
+    ace.getSession().setUndoManager(new UndoManager());
 
   };
 
@@ -695,6 +701,7 @@ var changeProject = function(filename) {
   new_documents.unshift(found);
   documents = new_documents;
   ace.setValue( documents[ 0 ].code, -1 );
+  ace.getSession().setUndoManager(new UndoManager());
   update();
 };
 
