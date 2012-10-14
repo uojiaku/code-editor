@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2012-10-10
+# 2012-10-13
 
 CACHE:
 /favicon.ico
@@ -11,12 +11,13 @@ js/editor.js
 js/appcache.js
 js/rawdeflate.js
 js/rawinflate.js
-js/codemirror/codemirror.css
-js/codemirror/codemirror.js
-js/codemirror/mode/css.js
-js/codemirror/mode/htmlmixed.js
-js/codemirror/mode/javascript.js
-js/codemirror/mode/xml.js
+js/ace/mode-css.js
+js/ace/ace.js
+js/ace/theme-chrome.js
+js/ace/mode-html.js
+js/ace/worker-javascript.js
+js/ace/keybinding-emacs.js
+js/ace/mode-javascript.js
 
 
 NETWORK:
