@@ -1453,9 +1453,10 @@ oop.inherits(JavaScriptWorker, Mirror);
 (function() {
     
     this.onUpdate = function() {
-        var value = this.doc.getValue();
-        value = value.replace(/^#!.*\n/, "\n");
-        
+        var value = this.doc.getValue().
+          replace(/^#!.*\n/, "\n").
+          replace(/^<(\w+).*?>\s*<\/\1>/gm, "").
+          replace(/<\/?script>/g, "");
 //        var start = new Date();
         try {
             parser.parse(value);

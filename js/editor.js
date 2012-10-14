@@ -81,7 +81,7 @@ document.body.appendChild( editor );
 
 var ace = ace.edit("editor");
 ace.setTheme("ace/theme/chrome");
-ace.getSession().setMode("ace/mode/html");
+ace.getSession().setMode("ace/mode/javascript");
 ace.getSession().setUseWrapMode(true);
 ace.getSession().setUseSoftTabs(true);
 ace.setPrintMarginColumn(false);
