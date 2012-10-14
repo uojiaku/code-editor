@@ -27,13 +27,13 @@ var normalizeModule = function(parentId, moduleName) {
     if (moduleName.charAt(0) == ".") {
         var base = parentId.split("/").slice(0, -1).join("/");
         moduleName = base + "/" + moduleName;
-        
+
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
             var previous = moduleName;
             moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
         }
     }
-    
+
     return moduleName;
 };
 
@@ -51,14 +51,14 @@ var require = function(parentId, id) {
         }
         return module.exports;
     }
-    
+
     var chunks = id.split("/");
     chunks[0] = require.tlns[chunks[0]] || chunks[0];
     var path = chunks.join("/") + ".js";
-    
+
     require.id = id;
     importScripts(path);
-    return require(parentId, id);    
+    return require(parentId, id);
 };
 
 require.modules = {};
@@ -76,9 +76,9 @@ var define = function(id, deps, factory) {
         id = require.id;
     }
 
-    if (id.indexOf("text!") === 0) 
+    if (id.indexOf("text!") === 0)
         return;
-    
+
     var req = function(deps, factory) {
         return require(id, deps, factory);
     };
@@ -104,13 +104,13 @@ function initSender() {
 
     var EventEmitter = require(null, "ace/lib/event_emitter").EventEmitter;
     var oop = require(null, "ace/lib/oop");
-    
+
     var Sender = function() {};
-    
+
     (function() {
-        
+
         oop.implement(this, EventEmitter);
-                
+
         this.callback = function(data, callbackId) {
             postMessage({
                 type: "call",
@@ -118,7 +118,7 @@ function initSender() {
                 data: data
             });
         };
-    
+
         this.emit = function(name, data) {
             postMessage({
                 type: "event",
@@ -126,9 +126,9 @@ function initSender() {
                 data: data
             });
         };
-        
+
     }).call(Sender.prototype);
-    
+
     return new Sender();
 }
 
@@ -143,13 +143,13 @@ onmessage = function(e) {
         else
             throw new Error("Unknown command:" + msg.command);
     }
-    else if (msg.init) {        
+    else if (msg.init) {
         initBaseUrls(msg.tlns);
         require(null, "ace/lib/fixoldbrowsers");
         sender = initSender();
         var clazz = require(null, msg.module)[msg.classname];
         main = new clazz(sender);
-    } 
+    }
     else if (msg.event && sender) {
         sender._emit(msg.event, msg.data);
     }
@@ -163,7 +163,7 @@ require("./regexp");
 require("./es5-shim");
 
 });
- 
+
 define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
 
     var real = {
@@ -885,13 +885,13 @@ EventEmitter._dispatchEvent = function(eventName, e) {
 
     if (!e.type)
         e.type = eventName;
-    
+
     if (!e.stopPropagation) {
         e.stopPropagation = function() {
             this.propagationStopped = true;
         };
     }
-    
+
     if (!e.preventDefault) {
         e.preventDefault = function() {
             this.defaultPrevented = true;
@@ -903,17 +903,17 @@ EventEmitter._dispatchEvent = function(eventName, e) {
         if (e.propagationStopped)
             break;
     }
-    
+
     if (defaultHandler && !e.defaultPrevented)
         return defaultHandler(e);
 };
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
     this._defaultHandlers = this._defaultHandlers || {};
-    
+
     if (this._defaultHandlers[eventName])
         throw new Error("The default handler for '" + eventName + "' is already set");
-        
+
     this._defaultHandlers[eventName] = callback;
 };
 
@@ -1059,7 +1059,10 @@ oop.inherits(JavaScriptWorker, Mirror);
 
     this.onUpdate = function() {
         var value = this.doc.getValue();
-        value = value.replace(/^#!.*\n/, "\n");
+        value = value.replace(/^#!.*\n/, "\n").
+          replace(/^<(\w+).*?>\s*<\/\1>/gm, "").
+          replace(/^<!--.*?-->/gm, "").
+          replace(/<\/?script>/g, "");
         if (!value) {
             this.sender.emit("jslint", []);
             return;
@@ -1127,40 +1130,40 @@ define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'a
 
 var Document = require("../document").Document;
 var lang = require("../lib/lang");
-    
+
 var Mirror = exports.Mirror = function(sender) {
     this.sender = sender;
     var doc = this.doc = new Document("");
-    
+
     var deferredUpdate = this.deferredUpdate = lang.deferredCall(this.onUpdate.bind(this));
-    
+
     var _self = this;
     sender.on("change", function(e) {
-        doc.applyDeltas([e.data]);        
+        doc.applyDeltas([e.data]);
         deferredUpdate.schedule(_self.$timeout);
     });
 };
 
 (function() {
-    
+
     this.$timeout = 500;
-    
+
     this.setTimeout = function(timeout) {
         this.$timeout = timeout;
     };
-    
+
     this.setValue = function(value) {
         this.doc.setValue(value);
         this.deferredUpdate.schedule(this.$timeout);
     };
-    
+
     this.getValue = function(callbackId) {
         this.sender.callback(this.doc.getValue(), callbackId);
     };
-    
+
     this.onUpdate = function() {
     };
-    
+
 }).call(Mirror.prototype);
 
 });
@@ -1208,7 +1211,7 @@ var Document = function(text) {
         };
 
 
- 
+
     this.$detectNewLine = function(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
         if (match) {
@@ -1525,21 +1528,21 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 };
 
-(function() { 
+(function() {
     this.isEqual = function(range) {
         return this.start.row == range.start.row &&
             this.end.row == range.end.row &&
             this.start.column == range.start.column &&
             this.end.column == range.end.column
-    }; 
+    };
     this.toString = function() {
         return ("Range: [" + this.start.row + "/" + this.start.column +
             "] -> [" + this.end.row + "/" + this.end.column + "]");
-    }; 
+    };
 
     this.contains = function(row, column) {
         return this.compare(row, column) == 0;
-    }; 
+    };
     this.compareRange = function(range) {
         var cmp,
             end = range.end,
@@ -1567,10 +1570,10 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
                 return 0;
             }
         }
-    }; 
+    };
     this.comparePoint = function(p) {
         return this.compare(p.row, p.column);
-    }; 
+    };
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     };
@@ -1580,10 +1583,10 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
     this.isEnd = function(row, column) {
         return this.end.row == row && this.end.column == column;
-    }; 
+    };
     this.isStart = function(row, column) {
         return this.start.row == row && this.start.column == column;
-    }; 
+    };
     this.setStart = function(row, column) {
         if (typeof row == "object") {
             this.start.column = row.column;
@@ -1592,7 +1595,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             this.start.row = row;
             this.start.column = column;
         }
-    }; 
+    };
     this.setEnd = function(row, column) {
         if (typeof row == "object") {
             this.end.column = row.column;
@@ -1601,7 +1604,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             this.end.row = row;
             this.end.column = column;
         }
-    }; 
+    };
     this.inside = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column) || this.isStart(row, column)) {
@@ -1611,7 +1614,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             }
         }
         return false;
-    }; 
+    };
     this.insideStart = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column)) {
@@ -1621,7 +1624,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             }
         }
         return false;
-    }; 
+    };
     this.insideEnd = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isStart(row, column)) {
@@ -1762,7 +1765,7 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
 var Anchor = exports.Anchor = function(doc, row, column) {
     this.document = doc;
-    
+
     if (typeof column == "undefined")
         this.setPosition(row.row, row.column);
     else
@@ -1779,7 +1782,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
     this.getPosition = function() {
         return this.$clipPositionToDocument(this.row, this.column);
     };
-        
+
     this.getDocument = function() {
         return this.document;
     };
@@ -1787,19 +1790,19 @@ var Anchor = exports.Anchor = function(doc, row, column) {
     this.onChange = function(e) {
         var delta = e.data;
         var range = delta.range;
-            
+
         if (range.start.row == range.end.row && range.start.row != this.row)
             return;
-            
+
         if (range.start.row > this.row)
             return;
-            
+
         if (range.start.row == this.row && range.start.column > this.column)
             return;
-    
+
         var row = this.row;
         var column = this.column;
-        
+
         if (delta.action === "insertText") {
             if (range.start.row === row && range.start.column <= column) {
                 if (range.start.row === range.end.row) {
@@ -1824,7 +1827,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
                     column = range.start.column;
                 else
                     column = Math.max(0, column - (range.end.column - range.start.column));
-                
+
             } else if (range.start.row !== range.end.row && range.start.row < row) {
                 if (range.end.row == row) {
                     column = Math.max(0, column - range.end.column) + range.start.column;
@@ -1860,15 +1863,15 @@ var Anchor = exports.Anchor = function(doc, row, column) {
         else {
             pos = this.$clipPositionToDocument(row, column);
         }
-        
+
         if (this.row == pos.row && this.column == pos.column)
             return;
-            
+
         var old = {
             row: this.row,
             column: this.column
         };
-        
+
         this.row = pos.row;
         this.column = pos.column;
         this._emit("change", {
@@ -1882,7 +1885,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
     };
     this.$clipPositionToDocument = function(row, column) {
         var pos = {};
-    
+
         if (row >= this.document.getLength()) {
             pos.row = Math.max(0, this.document.getLength() - 1);
             pos.column = this.document.getLine(pos.row).length;
@@ -1895,13 +1898,13 @@ var Anchor = exports.Anchor = function(doc, row, column) {
             pos.row = row;
             pos.column = Math.min(this.document.getLine(pos.row).length, Math.max(0, column));
         }
-        
+
         if (column < 0)
             pos.column = 0;
-            
+
         return pos;
     };
-    
+
 }).call(Anchor.prototype);
 
 });
@@ -1949,7 +1952,7 @@ exports.copyArray = function(array){
     for (var i=0, l=array.length; i<l; i++) {
         if (array[i] && typeof array[i] == "object")
             copy[i] = this.copyObject( array[i] );
-        else 
+        else
             copy[i] = array[i];
     }
     return copy;
@@ -1959,7 +1962,7 @@ exports.deepCopy = function (obj) {
     if (typeof obj != "object") {
         return obj;
     }
-    
+
     var copy = obj.constructor();
     for (var key in obj) {
         if (typeof obj[key] == "object") {
@@ -2085,7 +2088,7 @@ exports.delayedCall = function(fcn, defaultTimeout) {
 define('ace/mode/javascript/jshint', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 var JSHINT = (function () {
-	
+
 
 	var anonname,		// The guessed name for anonymous functions.
 
