@@ -434,13 +434,13 @@ document.addEventListener( 'keydown', function ( event ) {
 }, false );
 
 window.addEventListener( 'resize', function ( event ) {
+  ace.renderer.onResize(true);
 
   editor.style.width = window.innerWidth + 'px';
   editor.style.height = window.innerHeight + 'px';
 
   preview.style.width = window.innerWidth + 'px';
   preview.style.height = window.innerHeight + 'px';
-
 } );
 
 
