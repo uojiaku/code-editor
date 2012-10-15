@@ -87,8 +87,9 @@ ace.getSession().setUseSoftTabs(true);
 ace.setPrintMarginColumn(false);
 ace.setDisplayIndentGuides(false);
 ace.setFontSize('18px');
-var emacs = require("ace/keyboard/emacs").handler;
-ace.setKeyboardHandler(emacs);
+var CommandManager = ace.getKeyboardHandler();
+var EmacsManager = require("ace/keyboard/emacs").handler;
+ace.setKeyboardHandler(CommandManager);
 ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
 
 var UndoManager = require("ace/undomanager").UndoManager;
@@ -388,8 +389,19 @@ document.addEventListener( 'drop', function ( event ) {
 
 }, false );
 
-document.addEventListener( 'keydown', function ( event ) {
+document.addEventListener( 'keypress', function ( event ) {
+  if ( event.keyCode === 9829 ) { // <3
+    event.preventDefault();
+    if (ace.getKeyboardHandler() == CommandManager) {
+      ace.setKeyboardHandler(EmacsManager);
+    }
+    else {
+      ace.setKeyboardHandler(CommandManager);
+    }
+  }
+});
 
+document.addEventListener( 'keydown', function ( event ) {
   if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
     event.preventDefault();
