@@ -445,6 +445,8 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
+// Display hacks
+
 window.addEventListener( 'resize', function ( event ) {
   ace.renderer.onResize(true);
 
@@ -455,6 +457,27 @@ window.addEventListener( 'resize', function ( event ) {
   preview.style.height = window.innerHeight + 'px';
 } );
 
+var zoomEl = document.createElement('div');
+zoomEl.style.left = '-50%';
+zoomEl.style.width = '1px';
+zoomEl.style.height = '1px';
+zoomEl.style.position = 'absolute';
+document.body.appendChild(zoomEl);
+
+var lastZoom = zoomEl.offsetLeft;
+setInterval(function() {
+  if (zoomEl.offsetLeft != lastZoom) {
+    lastZoom = zoomEl.offsetLeft;
+    ace.renderer.onResize(true);
+  }
+}, 2000);
+
+document.addEventListener( 'keydown', function ( event ) {
+  console.log(event.keyCode);
+  if (!event.ctrlKey) return;
+  if (event.keyCode != 187 && event.keyCode != 189) return;
+  event.preventDefault();
+});
 
 // dialogs
 
