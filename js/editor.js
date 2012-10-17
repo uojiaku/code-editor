@@ -1,4 +1,3 @@
-
 window.URL = window.URL || window.webkitURL;
 
 // deflate
@@ -56,6 +55,8 @@ if ( window.location.hash ) {
 
 }
 
+var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
+
 // preview
 
 var preview = document.createElement( 'div' );
@@ -64,7 +65,9 @@ preview.style.left = '0px';
 preview.style.top = '0px';
 preview.style.width = window.innerWidth + 'px';
 preview.style.height = window.innerHeight + 'px';
-document.body.appendChild( preview );
+if (!EDIT_ONLY) {
+  document.body.appendChild( preview );
+}
 
 // editor
 
@@ -695,6 +698,7 @@ var save = function() {
 };
 
 var update = function () {
+  if (EDIT_ONLY) return;
 
   while ( preview.children.length > 0 ) {
 

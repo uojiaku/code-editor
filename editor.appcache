@@ -1,9 +1,8 @@
 CACHE MANIFEST
-# 2012-10-14
+# 2012-10-15
 
 CACHE:
 /favicon.ico
-/code-editor/
 index.html
 editor.css
 files/inconsolata.woff
