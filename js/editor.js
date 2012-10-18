@@ -38,23 +38,6 @@ var documents = ( localStorage.codeeditor !== undefined ) ?
   JSON.parse( localStorage.codeeditor ) :
   [templates[templates.length-1]];
 
-if ( window.location.hash ) {
-
-  var hash = window.location.hash.substr( 1 );
-  var version = hash.substr( 0, 2 );
-
-  if ( version == 'A/' ) {
-
-    alert( 'That shared link format is no longer supported.' );
-
-  } else if ( version == 'B/' ) {
-
-    documents[ 0 ].code = decode( hash.substr( 2 ) );
-
-  }
-
-}
-
 var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
 
 // preview
@@ -137,6 +120,7 @@ var projectMenu = function() {
     menuNew(),
     menuOpen(),
     menuSave(),
+    menuMakeCopy(),
     menuShare(),
     menuDownload(),
     menuInfo()
@@ -219,12 +203,24 @@ var buttonUpdate = function() {
   return el;
 };
 
+var menuMakeCopy = function() {
+  var el = document.createElement( 'li' );
+  el.textContent = 'make a copy';
+  el.addEventListener( 'click', function ( event ) {
+
+    openMakeCopyDialog();
+
+  }, false );
+
+  return el;
+};
+
 var menuSave = function() {
   var el = document.createElement( 'li' );
   el.textContent = 'save';
   el.addEventListener( 'click', function ( event ) {
 
-    openSaveDialog();
+    save();
 
   }, false );
 
@@ -330,36 +326,9 @@ var buttonCodeMenu = function() {
       );
     }
 
-    closeSaveDialog();
+    closeMakeCopyDialog();
 
     projectMenu();
-
-  }, false );
-
-  return el;
-};
-
-var buttonProjectMenu = function() {
-  var el = document.createElement( 'button' );
-  el.className = 'button';
-  el.textContent = '☰';
-  el.title = 'Switch to code menu';
-  el.addEventListener( 'click', function ( event ) {
-
-    codeToolbar();
-
-  }, false );
-
-  return el;
-};
-
-var buttonInfo = function() {
-  var el = document.createElement( 'button' );
-  el.className = 'button';
-  el.textContent = '?';
-  el.addEventListener( 'click', function ( event ) {
-
-    window.open( 'https://github.com/mrdoob/code-editor' );
 
   }, false );
 
@@ -408,7 +377,7 @@ document.addEventListener( 'keydown', function ( event ) {
   if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
     event.preventDefault();
-    openSaveDialog();
+    save();
 
   }
 
@@ -476,7 +445,6 @@ setInterval(function() {
 }, 2000);
 
 document.addEventListener( 'keydown', function ( event ) {
-  console.log(event.keyCode);
   if (!event.ctrlKey) return;
   if (event.keyCode != 187 && event.keyCode != 189) return;
   event.preventDefault();
@@ -543,23 +511,13 @@ var openNewDialog = function() {
 };
 
 var createProject = function(name, template_name) {
-  if (documents.length == 0 || documents[0].filename != name) {
-    documents.unshift({
-      filetype: 'text/plain',
-      autoupdate: documents[0].autoupdate
-    });
-  }
-
   var code = templates.
     reduce(function(code, template) {
       if (template.filename == template_name) return template.code;
       return code;
     }, undefined);
 
-  documents[0].code = code;
-  documents[0].filename = name;
-
-  localStorage.codeeditor = JSON.stringify(documents);
+  create(code, name);
 
   changeProject(name);
 };
@@ -626,7 +584,7 @@ var closeProjectsDialog = function() {
   dialog.parentElement.removeChild(dialog);
 };
 
-var openSaveDialog = function() {
+var openMakeCopyDialog = function() {
   var saveDialog = document.createElement( 'div' );
   saveDialog.id = 'save-dialog';
   saveDialog.className = 'dialog';
@@ -647,7 +605,7 @@ var openSaveDialog = function() {
   buttonSaveDialog.textContent = 'Save';
   buttonSaveDialog.addEventListener( 'click', function ( event ) {
     saveAs(saveFileField.value);
-    closeSaveDialog();
+    closeMakeCopyDialog();
   }, false );
   saveDialog.appendChild( buttonSaveDialog );
 
@@ -659,7 +617,7 @@ var openSaveDialog = function() {
   closeSaveLink.href = '#';
   closeSaveLink.textContent = '[ close ]';
   closeSaveLink.addEventListener( 'click', function ( event ) {
-    closeSaveDialog();
+    closeMakeCopyDialog();
     event.stopPropagation();
     event.preventDefault();
   }, false );
@@ -668,7 +626,7 @@ var openSaveDialog = function() {
   saveFileField.focus();
 };
 
-var closeSaveDialog = function() {
+var closeMakeCopyDialog = function() {
   var dialog = document.getElementById('save-dialog');
   if (!dialog) return;
 
@@ -677,19 +635,23 @@ var closeSaveDialog = function() {
 
 // actions
 
-var saveAs = function (title) {
-
-  if ( documents[ 0 ].filename != title) {
+var create = function(code, title) {
+  if (!title) title = nextUntitled();
+  if ( documents.length == 0 || documents[ 0 ].filename != title) {
     documents.unshift({
       filetype: 'text/plain',
       autoupdate: documents[ 0 ].autoupdate
     });
   }
 
-  documents[ 0 ].code = ace.getValue();
+  documents[ 0 ].code = code;
   documents[ 0 ].filename = title;
 
   localStorage.codeeditor = JSON.stringify( documents );
+};
+
+var saveAs = function (title) {
+  create(ace.getValue(), title);
 };
 
 var save = function() {
@@ -770,6 +732,40 @@ var toggle = function () {
   }
 
 };
+
+var nextUntitled = function() {
+  var nums = documents.
+    filter(function(doc) {
+      return doc.filename.match(/Untitled/);
+    }).
+    map(function(doc) {
+      return parseInt(doc.filename.replace(/Untitled\s*/, ''), 10);
+    }).
+    filter(function (num) {
+      return !isNaN(num);
+    }).
+    sort();
+
+  return 'Untitled ' + (nums.length == 0 ? 1 : nums[0] + 1);
+};
+
+
+if ( window.location.hash ) {
+
+  var hash = window.location.hash.substr( 1 );
+  var version = hash.substr( 0, 2 );
+
+  if ( version == 'A/' ) {
+
+    alert( 'That shared link format is no longer supported.' );
+
+  } else if ( version == 'B/' ) {
+
+    create(decode(hash.substr(2)));
+    window.location.hash = '';
+  }
+
+}
 
 codeToolbar();
 update();
