@@ -76,10 +76,6 @@ ace.setFontSize('18px');
 var CommandManager = ace.getKeyboardHandler();
 var EmacsManager = require("ace/keyboard/emacs").handler;
 ace.setKeyboardHandler(CommandManager);
-ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
-
-var UndoManager = require("ace/undomanager").UndoManager;
-ace.getSession().setUndoManager(new UndoManager());
 
 ace.getSession().on( "change", function () {
   save();
@@ -766,6 +762,11 @@ if ( window.location.hash ) {
   }
 
 }
+
+ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
+
+var UndoManager = require("ace/undomanager").UndoManager;
+ace.getSession().setUndoManager(new UndoManager());
 
 codeToolbar();
 update();
