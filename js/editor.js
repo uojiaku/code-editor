@@ -742,7 +742,7 @@ var nextUntitled = function() {
     }).
     sort();
 
-  return 'Untitled ' + (nums.length == 0 ? 1 : nums[nums.length] + 1);
+  return 'Untitled ' + (nums.length == 0 ? 1 : nums[nums.length-1] + 1);
 };
 
 
