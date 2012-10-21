@@ -43,11 +43,7 @@ var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
 // preview
 
 var preview = document.createElement( 'div' );
-preview.style.position = 'absolute';
-preview.style.left = '0px';
-preview.style.top = '0px';
-preview.style.width = window.innerWidth + 'px';
-preview.style.height = window.innerHeight + 'px';
+preview.id = "preview";
 if (!EDIT_ONLY) {
   document.body.appendChild( preview );
 }
@@ -58,11 +54,6 @@ var interval;
 
 var editor = document.createElement( 'div' );
 editor.id = "editor";
-editor.style.position = 'absolute';
-editor.style.left = '0px';
-editor.style.top = '0px';
-editor.style.width = window.innerWidth + 'px';
-editor.style.height = window.innerHeight + 'px';
 document.body.appendChild( editor );
 
 var ace = ace.edit("editor");
@@ -416,29 +407,10 @@ document.addEventListener( 'keydown', function ( event ) {
 // Display hacks
 
 window.addEventListener( 'resize', function ( event ) {
-  ace.renderer.onResize(true);
-
-  editor.style.width = window.innerWidth + 'px';
-  editor.style.height = window.innerHeight + 'px';
-
-  preview.style.width = window.innerWidth + 'px';
-  preview.style.height = window.innerHeight + 'px';
+  clearTimeout( interval );
+  interval = setTimeout( update, 300 );
 } );
 
-var zoomEl = document.createElement('div');
-zoomEl.style.left = '-50%';
-zoomEl.style.width = '1px';
-zoomEl.style.height = '1px';
-zoomEl.style.position = 'absolute';
-document.body.appendChild(zoomEl);
-
-var lastZoom = zoomEl.offsetLeft;
-setInterval(function() {
-  if (zoomEl.offsetLeft != lastZoom) {
-    lastZoom = zoomEl.offsetLeft;
-    ace.renderer.onResize(true);
-  }
-}, 2000);
 
 document.addEventListener( 'keydown', function ( event ) {
   if (!event.ctrlKey) return;
