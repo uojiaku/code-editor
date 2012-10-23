@@ -10,7 +10,6 @@ CACHE:
 /ChromeFixes.js
 /ammo.js
 /physijs_worker.js
-/ice
 editor.css
 files/inconsolata.woff
 js/editor.js
