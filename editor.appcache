@@ -1,8 +1,15 @@
 CACHE MANIFEST
-# 2012-10-20
+# 2012-10-22
 
 CACHE:
 /favicon.ico
+/Three.js
+/Tween.js
+/Detector.js
+/physi.js
+/ChromeFixes.js
+/ammo.js
+/physijs_worker.js
 editor.css
 files/inconsolata.woff
 js/editor.js
