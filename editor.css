@@ -118,3 +118,10 @@ ul.menu li {
 #editor .ace_scroller {
   background-color: rgba(255,255,255,0.0);
 }
+
+#popup {
+  position: absolute;
+  color: rgb(235,235,235);
+  padding: 40px 20px 20px 20px;
+  background-color: rgb(80,80,80);
+}
