@@ -405,14 +405,8 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
-// Display hacks
-
-window.addEventListener( 'resize', function ( event ) {
-  clearTimeout( interval );
-  interval = setTimeout( update, 300 );
-} );
-
-
+// Display hack. Disallow Ctrl++ and Ctrl+- zooming. It causes too
+// much heartache.
 document.addEventListener( 'keydown', function ( event ) {
   if (!event.ctrlKey) return;
   if (event.keyCode != 187 && event.keyCode != 189) return;
