@@ -322,6 +322,7 @@ var popup = ( function () {
     scope.hide();
   }, false );
   element.appendChild( buttonClose );
+
   var content = document.createElement( 'div' );
   content.style.top = '40px';
   element.appendChild( content );
@@ -333,7 +334,7 @@ var popup = ( function () {
   };
 
   window.addEventListener( 'load', update, false );
-  window.addEventListener( 'resize', update, false );
+  window.addEventListener( 'resize', function() {scope.hide();}, false );
 
   //
   this.show = function () {
