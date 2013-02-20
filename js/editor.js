@@ -61,6 +61,7 @@ ace.setTheme("ace/theme/chrome");
 ace.getSession().setMode("ace/mode/javascript");
 ace.getSession().setUseWrapMode(true);
 ace.getSession().setUseSoftTabs(true);
+ace.getSession().setTabSize(2);
 ace.setPrintMarginColumn(false);
 ace.setDisplayIndentGuides(false);
 ace.setFontSize('18px');
@@ -74,7 +75,7 @@ ace.getSession().on( "change", function () {
   if ( documents[ 0 ].autoupdate === false ) return;
 
   clearTimeout( interval );
-  interval = setTimeout( update, 300 );
+  interval = setTimeout( update, 1.5 * 1000 );
 });
 
 // toolbar
@@ -426,20 +427,25 @@ var openNewDialog = function() {
   newDialog.className = 'dialog';
   document.body.appendChild( newDialog );
 
-  var newFileLabel = document.createElement( 'label' );
-  newFileLabel.textContent = 'Name:';
-  newDialog.appendChild( newFileLabel );
+  var newProjectLabel = document.createElement( 'label' );
+  newProjectLabel.textContent = 'Name:';
+  newDialog.appendChild( newProjectLabel );
 
-  var newFileField = document.createElement( 'input' );
-  newFileField.type = 'text';
-  newFileField.size = 30;
-  newFileLabel.appendChild( newFileField );
+  var newProjectField = document.createElement( 'input' );
+  newProjectField.type = 'text';
+  newProjectField.size = 30;
+  newProjectLabel.appendChild( newProjectField );
+  newProjectField.addEventListener('keypress', function(event) {
+    if (event.keyCode != 13) return;
+    createProject(newProjectField.value, templateField.value);
+    closeNewDialog();
+  }, false);
 
   var buttonNewDialog = document.createElement( 'button' );
   buttonNewDialog.className = 'button';
   buttonNewDialog.textContent = 'Save';
   buttonNewDialog.addEventListener( 'click', function ( event ) {
-    createProject(newFileField.value, templateField.value);
+    createProject(newProjectField.value, templateField.value);
     closeNewDialog();
   }, false );
   newDialog.appendChild( buttonNewDialog );
@@ -475,7 +481,7 @@ var openNewDialog = function() {
   }, false );
   closeNewP.appendChild( closeNewLink );
 
-  newFileField.focus();
+  newProjectField.focus();
 };
 
 var createProject = function(name, template_name) {
@@ -567,6 +573,11 @@ var openMakeCopyDialog = function() {
   saveFileField.size = 30;
   saveFileField.value = documents[0].filename;
   saveFileLabel.appendChild( saveFileField );
+  saveFileField.addEventListener('keypress', function(event) {
+    if (event.keyCode != 13) return;
+    saveAs(saveFileField.value);
+    closeMakeCopyDialog();
+  }, false);
 
   var buttonSaveDialog = document.createElement( 'button' );
   buttonSaveDialog.className = 'button';
