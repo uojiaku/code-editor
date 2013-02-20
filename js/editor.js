@@ -296,81 +296,64 @@ var menuShare = function() {
 
 // popup
 var popup = ( function () {
+  var scope = this;
 
-        var scope = this;
+  var element = document.getElementById( 'popup' );
+  element.style.display = 'none';
 
-        var element = document.getElementById( 'popup' );
-        element.style.display = 'none';
+  var buttonClose = ( function () {
+    var svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
+    svg.setAttribute( 'width', 32 );
+    svg.setAttribute( 'height', 32 );
 
-        var buttonClose = ( function () {
+    var path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
+    path.setAttribute( 'd', 'M 9,12 L 11,10 L 15,14 L 19,10 L 21,12 L 17,16 L 21,20 L 19,22 L 15,18 L 11,22 L 9,20 L 13,16' );
+    path.setAttribute( 'fill', 'rgb(235,235,235)' );
+    svg.appendChild( path );
 
-                var svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
-                svg.setAttribute( 'width', 32 );
-                svg.setAttribute( 'height', 32 );
+    return svg;
+  } )();
 
-                var path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
-                path.setAttribute( 'd', 'M 9,12 L 11,10 L 15,14 L 19,10 L 21,12 L 17,16 L 21,20 L 19,22 L 15,18 L 11,22 L 9,20 L 13,16' );
-                path.setAttribute( 'fill', 'rgb(235,235,235)' );
-                svg.appendChild( path );
+  buttonClose.style.position = 'absolute';
+  buttonClose.style.top = '5px';
+  buttonClose.style.right = '5px';
+  buttonClose.style.cursor = 'pointer';
+  buttonClose.addEventListener( 'click', function ( event ) {
+    scope.hide();
+  }, false );
+  element.appendChild( buttonClose );
+  var content = document.createElement( 'div' );
+  content.style.top = '40px';
+  element.appendChild( content );
 
-                return svg;
+  var update = function () {
+    element.style.left = ( ( window.innerWidth - element.offsetWidth ) / 2 ) + 'px';
+    element.style.top = ( ( window.innerHeight - element.offsetHeight ) / 2 ) + 'px';
 
-        } )();
+  };
 
-        buttonClose.style.position = 'absolute';
-        buttonClose.style.top = '5px';
-        buttonClose.style.right = '5px';
-        buttonClose.style.cursor = 'pointer';
-        buttonClose.addEventListener( 'click', function ( event ) {
+  window.addEventListener( 'load', update, false );
+  window.addEventListener( 'resize', update, false );
 
-                scope.hide();
+  //
+  this.show = function () {
+    element.style.display = '';
+    update();
+  };
 
-        }, false );
-        element.appendChild( buttonClose );
-        var content = document.createElement( 'div' );
-        content.style.top = '40px';
-        element.appendChild( content );
+  this.hide = function () {
+    element.style.display = 'none';
+  };
 
-        var update = function () {
+  this.set = function ( value ) {
+    while ( content.children.length > 0 ) {
+      content.removeChild( content.firstChild );
+    }
+    content.appendChild( value );
+  };
 
-                element.style.left = ( ( window.innerWidth - element.offsetWidth ) / 2 ) + 'px';
-                element.style.top = ( ( window.innerHeight - element.offsetHeight ) / 2 ) + 'px';
-
-        };
-
-        window.addEventListener( 'load', update, false );
-        window.addEventListener( 'resize', update, false );
-
-        //
-
-        this.show = function () {
-
-                element.style.display = '';
-                update();
-
-        };
-
-        this.hide = function () {
-
-                element.style.display = 'none';
-
-        };
-        this.set = function ( value ) {
-
-                while ( content.children.length > 0 ) {
-
-                        content.removeChild( content.firstChild );
-
-                }
-
-                content.appendChild( value );
-
-        };
-
-        return this;
-
+  return this;
 } )();
-
 
 
 var buttonHide = function() {
