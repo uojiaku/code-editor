@@ -276,15 +276,30 @@ var menuShare = function() {
   el.textContent = 'share';
   el.addEventListener( 'click', function ( event ) {
 
-    //window.location.replace( '#B/' + encode( ace.getValue() ) );
     var dom = document.createElement( 'input' );
-    //dom.value = 'http://mrdoob.com/projects/code-editor/#B/' + encode( editor.getValue() );
     dom.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
     dom.style.width = '400px';
     dom.style.padding = '5px';
     dom.style.border = '0px';
 
-    popup.set( dom );
+    var link = document.createElement( 'a' );
+    link.href = 'http://is.gd/create.php?url=' + encodeURIComponent(dom.value);
+    link.target = "_blank";
+    link.textContent = 'make a short link.';
+    var shortener = document.createElement( 'div' );
+    shortener.className = 'instructions';
+    shortener.textContent = '…or, for easier sharing, ';
+    shortener.appendChild(link);
+
+    var title = document.createElement( 'h1' );
+    title.textContent = 'Copy this link to share your creation:';
+
+    var share = document.createElement( 'div' );
+    share.appendChild(title);
+    share.appendChild(dom);
+    share.appendChild(shortener);
+
+    popup.set( share );
     popup.show();
 
     dom.focus();
@@ -324,7 +339,6 @@ var popup = ( function () {
   element.appendChild( buttonClose );
 
   var content = document.createElement( 'div' );
-  content.style.top = '40px';
   element.appendChild( content );
 
   var update = function () {

@@ -124,4 +124,20 @@ ul.menu li {
   color: rgb(235,235,235);
   padding: 40px 20px 20px 20px;
   background-color: rgb(80,80,80);
+  border-radius: 2px;
+}
+
+#popup h1 {
+  margin: 0px 0px 5px;
+  font-size: 100%;
+}
+
+#popup a {
+  color: rgb(235,235,235);
+}
+
+#popup .instructions {
+  font-size: 75%;
+  text-align: right;
+  margin-top: 5px;
 }
