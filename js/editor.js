@@ -39,6 +39,7 @@ var documents = ( localStorage.codeeditor !== undefined ) ?
   [templates[templates.length-1]];
 
 var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
+var GAME_MODE = window.location.search.indexOf('?g') > -1;
 
 // preview
 
@@ -276,16 +277,41 @@ var menuShare = function() {
   el.textContent = 'share';
   el.addEventListener( 'click', function ( event ) {
 
-    var dom = document.createElement( 'input' );
-    dom.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
-    dom.style.width = '400px';
-    dom.style.padding = '5px';
-    dom.style.border = '0px';
+    var input = document.createElement( 'input' );
+    input.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
+    input.style.width = '400px';
+    input.style.padding = '5px';
+    input.style.border = '0px';
+
+    var toggle_game_mode = document.createElement('input');
+    toggle_game_mode.type = 'checkbox';
+    toggle_game_mode.addEventListener('change', function() {
+      if (this.checked) {
+        input.value = 'http://gamingjs.com/ice/?g#B/' + encode( ace.getValue() );
+      }
+      else {
+        input.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
+      }
+      input.focus();
+      input.select();
+    });
+    var toggle_label = document.createElement('label');
+    toggle_label.appendChild(toggle_game_mode);
+    toggle_label.appendChild(document.createTextNode("start in game mode"));
+    toggle_label.title =
+      "If this is checked, then the share link will start with the " +
+      "code hidden.";
+
+    var game_mode = document.createElement('div');
+    game_mode.appendChild(toggle_label);
 
     var link = document.createElement( 'a' );
-    link.href = 'http://is.gd/create.php?url=' + encodeURIComponent(dom.value);
+    link.href = 'http://is.gd/create.php?url=' + encodeURIComponent(input.value);
     link.target = "_blank";
     link.textContent = 'make a short link.';
+    toggle_game_mode.addEventListener('change', function() {
+      link.href = 'http://is.gd/create.php?url=' + encodeURIComponent(input.value);
+    });
     var shortener = document.createElement( 'div' );
     shortener.className = 'instructions';
     shortener.textContent = '…or, for easier sharing, ';
@@ -296,14 +322,15 @@ var menuShare = function() {
 
     var share = document.createElement( 'div' );
     share.appendChild(title);
-    share.appendChild(dom);
+    share.appendChild(input);
+    share.appendChild(game_mode);
     share.appendChild(shortener);
 
     popup.set( share );
     popup.show();
 
-    dom.focus();
-    dom.select();
+    input.focus();
+    input.select();
 
   }, false );
   return el;
@@ -783,22 +810,22 @@ var download = function(el) {
   el.download = documents[ 0 ].filename;
 };
 
-var toggle = function () {
+var toggle = function() {
+  if ( editor.style.display === '' ) hideCode();
+  else showCode();
+};
 
-  if ( editor.style.display === '' ) {
+var showCode = function() {
+  codeToolbar();
+  editor.style.display = '';
+  ace.renderer.onResize();
+  ace.focus();
+};
 
-    shortCodeToolbar();
-    editor.style.display = 'none';
-    preview.children[0].focus();
-
-  } else {
-
-    codeToolbar();
-    editor.style.display = '';
-    ace.focus();
-
-  }
-
+var hideCode = function() {
+  shortCodeToolbar();
+  editor.style.display = 'none';
+  preview.children[0].focus();
 };
 
 var nextUntitled = function() {
@@ -836,9 +863,12 @@ if ( window.location.hash ) {
 }
 
 ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
+// Don't consider initial setValue to be a change requiring an update:
+clearTimeout( interval );
 
 var UndoManager = require("ace/undomanager").UndoManager;
 ace.getSession().setUndoManager(new UndoManager());
 
 codeToolbar();
 update();
+if (GAME_MODE) hideCode();

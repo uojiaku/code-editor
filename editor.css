@@ -123,7 +123,7 @@ ul.menu li {
   position: absolute;
   color: rgb(235,235,235);
   padding: 40px 20px 20px 20px;
-  background-color: rgb(80,80,80);
+  background-color: rgba(80,80,80,0.95);
   border-radius: 2px;
 }
 
@@ -136,7 +136,7 @@ ul.menu li {
   color: rgb(235,235,235);
 }
 
-#popup .instructions {
+#popup .instructions, #popup label {
   font-size: 75%;
   text-align: right;
   margin-top: 5px;
