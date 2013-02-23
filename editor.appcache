@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2012-10-22
+# 2013-02-22
 
 CACHE:
 /favicon.ico
@@ -7,6 +7,8 @@ CACHE:
 /Tween.js
 /Detector.js
 /physi.js
+/Mouse.js
+/Scoreboard.js
 /ChromeFixes.js
 /ammo.js
 /physijs_worker.js
