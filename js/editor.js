@@ -182,7 +182,7 @@ var buttonUpdate = function() {
 
     documents[ 0 ].autoupdate = documents[ 0 ].autoupdate === false;
 
-    localStorage.codeeditor = JSON.stringify( documents );
+    syncStore();
 
   }, false );
 
@@ -663,6 +663,26 @@ var projectsDialogRow = function(doc) {
 
   }, false );
   row.appendChild(link);
+  row.appendChild(document.createTextNode(' '));
+
+  var del = document.createElement( 'a' );
+  del.href = '#';
+  del.textContent = '[delete]';
+  del.className = 'delete';
+  del.addEventListener( 'click', function ( event ) {
+    var message =
+      'Once a project is deleted, there is no way to get it back. ' +
+      'Are you sure that you want to delete "' + doc.filename + '"?';
+
+    if (confirm(message)) {
+      deleteProject(doc.filename);
+      openProjectsDialog();
+    }
+    event.stopPropagation();
+    event.preventDefault();
+
+  }, false );
+  row.appendChild(del);
 
   return row;
 };
@@ -742,7 +762,7 @@ var create = function(code, title) {
   documents[ 0 ].code = code;
   documents[ 0 ].filename = title;
 
-  localStorage.codeeditor = JSON.stringify( documents );
+  syncStore();
 };
 
 var saveAs = function (title) {
@@ -751,6 +771,10 @@ var saveAs = function (title) {
 
 var save = function() {
   documents[ 0 ].code = ace.getValue();
+  syncStore();
+};
+
+var syncStore = function() {
   localStorage.codeeditor = JSON.stringify( documents );
 };
 
@@ -799,6 +823,26 @@ var changeProject = function(filename) {
   ace.setValue( documents[ 0 ].code, -1 );
   ace.getSession().setUndoManager(new UndoManager());
   update();
+};
+
+var deleteProject = function(filename) {
+  var new_documents = [];
+
+  var i = 0, found;
+  while (i < documents.length) {
+    if (documents[i].filename == filename) {
+      found = documents[i];
+    }
+    else {
+      new_documents.push(documents[i]);
+    }
+    i++;
+  }
+
+  if ( ! found ) return;
+
+  documents = new_documents;
+  syncStore();
 };
 
 var download = function(el) {

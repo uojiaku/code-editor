@@ -141,3 +141,7 @@ ul.menu li {
   text-align: right;
   margin-top: 5px;
 }
+
+#projects-dialog a.delete {
+  color: rgb(180, 180, 180);
+}
