@@ -123,7 +123,7 @@ ul.menu li {
   position: absolute;
   color: rgb(235,235,235);
   padding: 40px 20px 20px 20px;
-  background-color: rgba(80,80,80,0.95);
+  background-color: rgba(24,24,24,1);
   border-radius: 2px;
 }
 
