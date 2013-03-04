@@ -27,12 +27,16 @@ var templates = [ {
   autoupdate: true,
   code: decode( "s0nKT6m0s9EHU1w2xclFmQUlCsVFybZKGSUlBVb6+umJuZl56V7Besn5ufohGUWpqXpZxUpALRC1RGhyzijKz011y6xILcau1Y5LQUFfXyEyv7RIITk/JVUhPT+1WCEjtShVT0+PC64cAA==" )
 }, {
+  filename: '3D Starter Project (with Physics)',
+  filetype: 'text/plain',
+  autoupdate: true,
+  code: decode( "lVRZTxsxEH7PrxjRBzZV2F2ooBKXhNJwVFVASXq8IbM7iQ1Ze2t7sw2I/96xvVmuILVWDsv+vplvLh/eqHx5fJj4v86hybQoLRidHW1wa8v9JJmxQsjZ13GcqSKZcI0Y35oNogTsP5BKvjTif0l9rlWBp+IPmlfUFfe4A5AkcOWsZwYMWkt0Q6f+6NbEAWdiVhQKjmBznR93Rw42D9bwaqXvUL/HLAP6OqCCjSBpwoUB+tQcNYKx1XQKQoKqNJAFhFrM58BZWaLcJ8aCaTAZSiRPEutWxtidRQ8wpSTkE1Hg2GK5DzuQwF4Kj10n2fNiiv1Ms4Wwy8gZmJyPBoP4B2ZW6U8RpD3Y2k7pN4Vu961GRlVANGB5o3WlqRa55aSpFjJXdSykRP3TnfUI4BZHMeP2FeLcH64gzJQk41ozK5QHOpNJwzxoHGWUFM2a6IP4K9SeKRbY97fR593eC2s92KZPSssngkJ6x9SltlzNNCu5yBpbAQ+w5fUkOz1oN0GZ2209bVeeAi/kMHiKS2UEqZHxPTndTdOnorA8jwLoZdJ99XPN6pB7l/ZGtS+DklaFWmQ0a22DaJQ5dZN+EVqfyQUzo+Yq8olYAV1TjMU9Rm/Lt6ZenpqrrCpQ2ti9BrHvz7zPxTyPWqO5KgZzdKA1DGOXc4xvWHY306oirporPz4fpn61A/KxWTCenIwm0L/8cjE8g8shhTWA4eDXBL5dDActrNNpeCdSFMwiFMql3M2US5SbKbqfVjLzxyygoi48+C7U+LtCYwOZAKeaCFGD8mE8y1rYRL6EPWjrB/BI39ayOwiSRpWEMjxBzzU4TW5cWxHNoIqimrcWvIHvZe5Camy4ybY06gZcO2RK5mBcO1CjrIKmp65QyvJgFq17GVRlo5XL0KvJXtrKfhJz0Gnf0b8=" )
+}, {
   filename: 'Spinning Multi-Sided Thingy',
   filetype: 'text/plain',
   autoupdate: true,
   code: decode( "jVRha9swEP28/ArRL1WHUdRCGMRpYfPSZWOF0RT2WbMusYYteSclTlr63yfZchYvGcwYx7577+np7pTZDyP3d7Nx+zOa2RxV7YjF/PaicK6ejsdrUSm9/rJkuanGTwUCsJ/2wlM67H+QsgJNBfdqB/Y89W5EyFYgyUUFKBJic9CQEAQtAQHTmF6Dl3G4T0glHKASpX8DW6QjD1BaOXoVoEKrkA8f/mu10blTRkcAefEx0q1AbomGhjwtHudztgyRyOmWE7aG3HlQo7Q0DVNaA35X0hVkPIgtQK0Ll7bEbgsD5W+ArZLaQtZm6btJEtUTcu1vzvnVMZ3Vxqpgmj17pQnn6ehN65gJKWmHiYT20RdmsOzn3FhRgESjP8U8veHcLxepfREHrAdfzw/CqvwhZmlXMG/NlAanhO94eyUkxhuFsELvaUocbuA0/lV5+VC2Kbnpkq99mUP3Tpanp32Ojv/UIBB7kX5MBkKZ0FthH2OKRoEeyiy4rASBWdjUAnaU71btdQa4VM9AT2YgOTMCvSNp8k0F2rFwqph1+xJYJXCttPfI039izBZwVZrGoy4LJSXoy3NgUdfeXlaoUtKDUWmqeQkB1G7hdTD7hyMRxx/h1wase9+GPeA+9IlG1HFzGBrXItjOm/ros0ybxuu8JZz5KZikZ6D7c9Drv7rFuhcaz/rRUL+ODn8QvwE=" )
 } ];
-
 
 var documents = ( localStorage.codeeditor !== undefined ) ?
   JSON.parse( localStorage.codeeditor ) :
