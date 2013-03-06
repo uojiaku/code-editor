@@ -55,8 +55,6 @@ if (!EDIT_ONLY) {
 
 // editor
 
-var interval;
-
 var editor_el = document.createElement( 'div' );
 editor_el.id = "editor";
 document.body.appendChild( editor_el );
@@ -78,11 +76,7 @@ editor.setKeyboardHandler(CommandManager);
 
 function handleChange(event) {
   save();
-
-  if ( documents[ 0 ].autoupdate === false ) return;
-
-  clearTimeout( interval );
-  interval = setTimeout( update, 1.5 * 1000 );
+  resetUpdateTimer();
 }
 
 function setContent(data) {
@@ -90,6 +84,30 @@ function setContent(data) {
   editor.setValue(data);
   editor.getSession().setUndoManager(new UndoManager());
   editor.getSession().on('change', handleChange);
+  update(); // visualization layer
+}
+
+var interval;
+document.addEventListener('keydown', function (event) {
+  if (interval) resetUpdateTimer();
+});
+
+editor.keyBinding.originalOnCommandKey = editor.keyBinding.onCommandKey;
+editor.keyBinding.onCommandKey = function(e, hashId, keyCode) {
+  if (keyCode >=37 && keyCode <= 40) {
+    if (interval) resetUpdateTimer();
+  }
+  this.originalOnCommandKey(e, hashId, keyCode);
+};
+
+function resetUpdateTimer() {
+  if (documents[0].autoupdate === false) return;
+
+  clearTimeout(interval);
+  interval = setTimeout(
+    function() { update(); interval = undefined; },
+    1.5 * 1000
+  );
 }
 
 // popup
@@ -474,9 +492,7 @@ document.addEventListener( 'drop', function ( event ) {
   var reader = new FileReader();
 
   reader.onload = function ( event ) {
-
     setContent( event.target.result, -1 );
-
   };
 
   reader.readAsText( file );
@@ -833,7 +849,6 @@ var changeProject = function(filename) {
   new_documents.unshift(found);
   documents = new_documents;
   setContent( documents[ 0 ].code, -1 );
-  update();
 };
 
 var deleteProject = function(filename) {
@@ -920,5 +935,4 @@ if ( window.location.hash ) {
 setContent((documents.length > 0) ? documents[0].code : templates[0].code, -1);
 
 codeToolbar();
-update();
 if (GAME_MODE) hideCode();
