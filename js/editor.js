@@ -70,18 +70,27 @@ editor.getSession().setTabSize(2);
 editor.setPrintMarginColumn(false);
 editor.setDisplayIndentGuides(false);
 editor.setFontSize('18px');
+
+var UndoManager = require("ace/undomanager").UndoManager;
 var CommandManager = editor.getKeyboardHandler();
 var EmacsManager = require("ace/keyboard/emacs").handler;
 editor.setKeyboardHandler(CommandManager);
 
-editor.getSession().on( "change", function (event) {
+function handleChange(event) {
   save();
 
   if ( documents[ 0 ].autoupdate === false ) return;
 
   clearTimeout( interval );
   interval = setTimeout( update, 1.5 * 1000 );
-});
+}
+
+function setContent(data) {
+  editor.getSession().removeListener('change', handleChange);
+  editor.setValue(data);
+  editor.getSession().setUndoManager(new UndoManager());
+  editor.getSession().on('change', handleChange);
+}
 
 // popup
 
@@ -466,8 +475,7 @@ document.addEventListener( 'drop', function ( event ) {
 
   reader.onload = function ( event ) {
 
-    editor.setValue( event.target.result, -1 );
-    editor.getSession().setUndoManager(new UndoManager());
+    setContent( event.target.result, -1 );
 
   };
 
@@ -824,8 +832,7 @@ var changeProject = function(filename) {
 
   new_documents.unshift(found);
   documents = new_documents;
-  editor.setValue( documents[ 0 ].code, -1 );
-  editor.getSession().setUndoManager(new UndoManager());
+  setContent( documents[ 0 ].code, -1 );
   update();
 };
 
@@ -910,12 +917,7 @@ if ( window.location.hash ) {
 
 }
 
-editor.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
-// Don't consider initial setValue to be a change requiring an update:
-clearTimeout( interval );
-
-var UndoManager = require("ace/undomanager").UndoManager;
-editor.getSession().setUndoManager(new UndoManager());
+setContent((documents.length > 0) ? documents[0].code : templates[0].code, -1);
 
 codeToolbar();
 update();
