@@ -57,24 +57,24 @@ if (!EDIT_ONLY) {
 
 var interval;
 
-var editor = document.createElement( 'div' );
-editor.id = "editor";
-document.body.appendChild( editor );
+var editor_el = document.createElement( 'div' );
+editor_el.id = "editor";
+document.body.appendChild( editor_el );
 
-var ace = ace.edit("editor");
-ace.setTheme("ace/theme/chrome");
-ace.getSession().setMode("ace/mode/javascript");
-ace.getSession().setUseWrapMode(true);
-ace.getSession().setUseSoftTabs(true);
-ace.getSession().setTabSize(2);
-ace.setPrintMarginColumn(false);
-ace.setDisplayIndentGuides(false);
-ace.setFontSize('18px');
-var CommandManager = ace.getKeyboardHandler();
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/chrome");
+editor.getSession().setMode("ace/mode/javascript");
+editor.getSession().setUseWrapMode(true);
+editor.getSession().setUseSoftTabs(true);
+editor.getSession().setTabSize(2);
+editor.setPrintMarginColumn(false);
+editor.setDisplayIndentGuides(false);
+editor.setFontSize('18px');
+var CommandManager = editor.getKeyboardHandler();
 var EmacsManager = require("ace/keyboard/emacs").handler;
-ace.setKeyboardHandler(CommandManager);
+editor.setKeyboardHandler(CommandManager);
 
-ace.getSession().on( "change", function () {
+editor.getSession().on( "change", function (event) {
   save();
 
   if ( documents[ 0 ].autoupdate === false ) return;
@@ -282,7 +282,7 @@ var menuShare = function() {
   el.addEventListener( 'click', function ( event ) {
 
     var input = document.createElement( 'input' );
-    input.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
+    input.value = 'http://gamingjs.com/ice/#B/' + encode( editor.getValue() );
     input.style.width = '400px';
     input.style.padding = '5px';
     input.style.border = '0px';
@@ -291,10 +291,10 @@ var menuShare = function() {
     toggle_game_mode.type = 'checkbox';
     toggle_game_mode.addEventListener('change', function() {
       if (this.checked) {
-        input.value = 'http://gamingjs.com/ice/?g#B/' + encode( ace.getValue() );
+        input.value = 'http://gamingjs.com/ice/?g#B/' + encode( editor.getValue() );
       }
       else {
-        input.value = 'http://gamingjs.com/ice/#B/' + encode( ace.getValue() );
+        input.value = 'http://gamingjs.com/ice/#B/' + encode( editor.getValue() );
       }
       input.focus();
       input.select();
@@ -466,8 +466,8 @@ document.addEventListener( 'drop', function ( event ) {
 
   reader.onload = function ( event ) {
 
-    ace.setValue( event.target.result, -1 );
-    ace.getSession().setUndoManager(new UndoManager());
+    editor.setValue( event.target.result, -1 );
+    editor.getSession().setUndoManager(new UndoManager());
 
   };
 
@@ -478,11 +478,11 @@ document.addEventListener( 'drop', function ( event ) {
 document.addEventListener( 'keypress', function ( event ) {
   if ( event.keyCode === 9829 ) { // <3
     event.preventDefault();
-    if (ace.getKeyboardHandler() == CommandManager) {
-      ace.setKeyboardHandler(EmacsManager);
+    if (editor.getKeyboardHandler() == CommandManager) {
+      editor.setKeyboardHandler(EmacsManager);
     }
     else {
-      ace.setKeyboardHandler(CommandManager);
+      editor.setKeyboardHandler(CommandManager);
     }
   }
 });
@@ -770,11 +770,11 @@ var create = function(code, title) {
 };
 
 var saveAs = function (title) {
-  create(ace.getValue(), title);
+  create(editor.getValue(), title);
 };
 
 var save = function() {
-  documents[ 0 ].code = ace.getValue();
+  documents[ 0 ].code = editor.getValue();
   syncStore();
 };
 
@@ -800,7 +800,7 @@ var update = function () {
   var content = iframe.contentDocument || iframe.contentWindow.document;
 
   content.open();
-  content.write( ace.getValue() );
+  content.write( editor.getValue() );
   content.close();
 
   content.body.style.margin = '0';
@@ -824,8 +824,8 @@ var changeProject = function(filename) {
 
   new_documents.unshift(found);
   documents = new_documents;
-  ace.setValue( documents[ 0 ].code, -1 );
-  ace.getSession().setUndoManager(new UndoManager());
+  editor.setValue( documents[ 0 ].code, -1 );
+  editor.getSession().setUndoManager(new UndoManager());
   update();
 };
 
@@ -850,7 +850,7 @@ var deleteProject = function(filename) {
 };
 
 var download = function(el) {
-  var blob = new Blob( [ ace.getValue() ], { type: documents[ 0 ].filetype } );
+  var blob = new Blob( [ editor.getValue() ], { type: documents[ 0 ].filetype } );
   var objectURL = URL.createObjectURL( blob );
 
   el.href = objectURL;
@@ -859,20 +859,20 @@ var download = function(el) {
 };
 
 var toggle = function() {
-  if ( editor.style.display === '' ) hideCode();
+  if ( editor_el.style.display === '' ) hideCode();
   else showCode();
 };
 
 var showCode = function() {
   codeToolbar();
-  editor.style.display = '';
-  ace.renderer.onResize();
-  ace.focus();
+  editor_el.style.display = '';
+  editor.renderer.onResize();
+  editor.focus();
 };
 
 var hideCode = function() {
   shortCodeToolbar();
-  editor.style.display = 'none';
+  editor_el.style.display = 'none';
   preview.children[0].focus();
 };
 
@@ -910,12 +910,12 @@ if ( window.location.hash ) {
 
 }
 
-ace.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
+editor.setValue((documents.length > 0) ? documents[ 0 ].code : templates[ 0 ].code, -1);
 // Don't consider initial setValue to be a change requiring an update:
 clearTimeout( interval );
 
 var UndoManager = require("ace/undomanager").UndoManager;
-ace.getSession().setUndoManager(new UndoManager());
+editor.getSession().setUndoManager(new UndoManager());
 
 codeToolbar();
 update();
