@@ -81,7 +81,7 @@ function handleChange(event) {
 
 function setContent(data) {
   editor.getSession().removeListener('change', handleChange);
-  editor.setValue(data);
+  editor.setValue(data, -1);
   editor.getSession().setUndoManager(new UndoManager());
   editor.getSession().on('change', handleChange);
   update(); // visualization layer
@@ -492,7 +492,7 @@ document.addEventListener( 'drop', function ( event ) {
   var reader = new FileReader();
 
   reader.onload = function ( event ) {
-    setContent( event.target.result, -1 );
+    setContent( event.target.result );
   };
 
   reader.readAsText( file );
@@ -848,7 +848,7 @@ var changeProject = function(filename) {
 
   new_documents.unshift(found);
   documents = new_documents;
-  setContent( documents[ 0 ].code, -1 );
+  setContent( documents[ 0 ].code );
 };
 
 var deleteProject = function(filename) {
@@ -932,7 +932,7 @@ if ( window.location.hash ) {
 
 }
 
-setContent((documents.length > 0) ? documents[0].code : templates[0].code, -1);
+setContent((documents.length > 0) ? documents[0].code : templates[0].code);
 
 codeToolbar();
 if (GAME_MODE) hideCode();
