@@ -28,130 +28,132 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/chrome', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/textmate', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+
 
 exports.isDark = false;
-exports.cssClass = "ace-chrome";
-exports.cssText = ".ace-chrome .ace_gutter {\
-background: #ebebeb;\
+exports.cssClass = "ace-tm";
+exports.cssText = ".ace-tm .ace_gutter {\
+background: #f0f0f0;\
 color: #333;\
-overflow : hidden;\
 }\
-.ace-chrome .ace_print-margin {\
+.ace-tm .ace_print-margin {\
 width: 1px;\
 background: #e8e8e8;\
 }\
-.ace-chrome .ace_scroller {\
+.ace-tm .ace_fold {\
+background-color: #6B72E6;\
+}\
+.ace-tm .ace_scroller {\
 background-color: #FFFFFF;\
 }\
-.ace-chrome .ace_cursor {\
+.ace-tm .ace_cursor {\
 border-left: 2px solid black;\
 }\
-.ace-chrome .ace_overwrite-cursors .ace_cursor {\
+.ace-tm .ace_overwrite-cursors .ace_cursor {\
 border-left: 0px;\
 border-bottom: 1px solid black;\
 }\
-.ace-chrome .ace_invisible {\
+.ace-tm .ace_invisible {\
 color: rgb(191, 191, 191);\
 }\
-.ace-chrome .ace_constant.ace_buildin {\
+.ace-tm .ace_storage,\
+.ace-tm .ace_keyword {\
+color: blue;\
+}\
+.ace-tm .ace_constant {\
+color: rgb(197, 6, 11);\
+}\
+.ace-tm .ace_constant.ace_buildin {\
 color: rgb(88, 72, 246);\
 }\
-.ace-chrome .ace_constant.ace_language {\
+.ace-tm .ace_constant.ace_language {\
 color: rgb(88, 92, 246);\
 }\
-.ace-chrome .ace_constant.ace_library {\
+.ace-tm .ace_constant.ace_library {\
 color: rgb(6, 150, 14);\
 }\
-.ace-chrome .ace_invalid {\
-background-color: rgb(153, 0, 0);\
-color: white;\
+.ace-tm .ace_invalid {\
+background-color: rgba(255, 0, 0, 0.1);\
+color: red;\
 }\
-.ace-chrome .ace_fold {\
-}\
-.ace-chrome .ace_support.ace_function {\
+.ace-tm .ace_support.ace_function {\
 color: rgb(60, 76, 114);\
 }\
-.ace-chrome .ace_support.ace_constant {\
+.ace-tm .ace_support.ace_constant {\
 color: rgb(6, 150, 14);\
 }\
-.ace-chrome .ace_support.ace_type,\
-.ace-chrome .ace_support.ace_class\
-.ace-chrome .ace_support.ace_other {\
+.ace-tm .ace_support.ace_type,\
+.ace-tm .ace_support.ace_class {\
 color: rgb(109, 121, 222);\
 }\
-.ace-chrome .ace_variable.ace_parameter {\
-font-style:italic;\
-color:#FD971F;\
-}\
-.ace-chrome .ace_keyword.ace_operator {\
+.ace-tm .ace_keyword.ace_operator {\
 color: rgb(104, 118, 135);\
 }\
-.ace-chrome .ace_comment {\
-color: #236e24;\
+.ace-tm .ace_string {\
+color: rgb(3, 106, 7);\
 }\
-.ace-chrome .ace_comment.ace_doc {\
-color: #236e24;\
+.ace-tm .ace_comment {\
+color: rgb(76, 136, 107);\
 }\
-.ace-chrome .ace_comment.ace_doc.ace_tag {\
-color: #236e24;\
+.ace-tm .ace_comment.ace_doc {\
+color: rgb(0, 102, 255);\
 }\
-.ace-chrome .ace_constant.ace_numeric {\
+.ace-tm .ace_comment.ace_doc.ace_tag {\
+color: rgb(128, 159, 191);\
+}\
+.ace-tm .ace_constant.ace_numeric {\
 color: rgb(0, 0, 205);\
 }\
-.ace-chrome .ace_variable {\
+.ace-tm .ace_variable {\
 color: rgb(49, 132, 149);\
 }\
-.ace-chrome .ace_xml-pe {\
+.ace-tm .ace_xml-pe {\
 color: rgb(104, 104, 91);\
 }\
-.ace-chrome .ace_entity.ace_name.ace_function {\
+.ace-tm .ace_entity.ace_name.ace_function {\
 color: #0000A2;\
 }\
-.ace-chrome .ace_markup.ace_heading {\
+.ace-tm .ace_markup.ace_heading {\
 color: rgb(12, 7, 255);\
 }\
-.ace-chrome .ace_markup.ace_list {\
+.ace-tm .ace_markup.ace_list {\
 color:rgb(185, 6, 144);\
 }\
-.ace-chrome .ace_marker-layer .ace_selection {\
+.ace-tm .ace_meta.ace_tag {\
+color:rgb(0, 22, 142);\
+}\
+.ace-tm .ace_string.ace_regex {\
+color: rgb(255, 0, 0)\
+}\
+.ace-tm .ace_marker-layer .ace_selection {\
 background: rgb(181, 213, 255);\
 }\
-.ace-chrome .ace_marker-layer .ace_step {\
+.ace-tm.ace_multiselect .ace_selection.ace_start {\
+box-shadow: 0 0 3px 0px white;\
+border-radius: 2px;\
+}\
+.ace-tm .ace_marker-layer .ace_step {\
 background: rgb(252, 255, 0);\
 }\
-.ace-chrome .ace_marker-layer .ace_stack {\
+.ace-tm .ace_marker-layer .ace_stack {\
 background: rgb(164, 229, 101);\
 }\
-.ace-chrome .ace_marker-layer .ace_bracket {\
+.ace-tm .ace_marker-layer .ace_bracket {\
 margin: -1px 0 0 -1px;\
 border: 1px solid rgb(192, 192, 192);\
 }\
-.ace-chrome .ace_marker-layer .ace_active-line {\
+.ace-tm .ace_marker-layer .ace_active-line {\
 background: rgba(0, 0, 0, 0.07);\
 }\
-.ace-chrome .ace_gutter-active-line {\
+.ace-tm .ace_gutter-active-line {\
 background-color : #dcdcdc;\
 }\
-.ace-chrome .ace_marker-layer .ace_selected-word {\
+.ace-tm .ace_marker-layer .ace_selected-word {\
 background: rgb(250, 250, 255);\
 border: 1px solid rgb(200, 200, 250);\
 }\
-.ace-chrome .ace_storage,\
-.ace-chrome .ace_keyword,\
-.ace-chrome .ace_meta.ace_tag {\
-color: rgb(147, 15, 128);\
-}\
-.ace-chrome .ace_string.ace_regex {\
-color: rgb(255, 0, 0)\
-}\
-.ace-chrome .ace_string {\
-color: #1A1AA6;\
-}\
-.ace-chrome .ace_entity.ace_other.ace_attribute-name {\
-color: #994409;\
-}\
-.ace-chrome .ace_indent-guide {\
+.ace-tm .ace_indent-guide {\
 background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==\") right repeat-y;\
 }\
 ";
