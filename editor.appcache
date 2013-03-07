@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2013-03-06
+# 2013-03-06:v2
 
 CACHE:
 /favicon.ico
@@ -21,6 +21,7 @@ js/rawinflate.js
 js/ace/mode-css.js
 js/ace/ace.js
 js/ace/theme-chrome.js
+js/ace/theme-textmate.js
 js/ace/mode-html.js
 js/ace/worker-javascript.js
 js/ace/keybinding-emacs.js
