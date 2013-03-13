@@ -45,21 +45,27 @@ var documents = ( localStorage.codeeditor !== undefined ) ?
 var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
 var GAME_MODE = window.location.search.indexOf('?g') > -1;
 
+var ice_parent = document.getElementById('ice') || document.body,
+    embedded = !!document.getElementById('ice');
+
+ice_parent.style.margin = '0px';
+ice_parent.style.overflow = 'hidden';
+
 // preview
 
 var preview = document.createElement( 'div' );
-preview.id = "preview";
+preview.id = embedded ? "preview_embed" : "preview";
 if (!EDIT_ONLY) {
-  document.body.appendChild( preview );
+  ice_parent.appendChild( preview );
 }
 
 // editor
 
 var editor_el = document.createElement( 'div' );
-editor_el.id = "editor";
-document.body.appendChild( editor_el );
+editor_el.id = embedded ? "editor_embed" : "editor";
+ice_parent.appendChild( editor_el );
 
-var editor = ace.edit("editor");
+var editor = ace.edit(editor_el.id);
 editor.setTheme("ace/theme/chrome");
 editor.getSession().setMode("ace/mode/javascript");
 editor.getSession().setUseWrapMode(true);
@@ -114,7 +120,7 @@ function resetUpdateTimer() {
 
 var popup_el = document.createElement( 'div' );
 popup_el.id = "popup";
-document.body.appendChild( popup_el );
+if (!embedded) document.body.appendChild( popup_el );
 
 // toolbar
 
@@ -128,6 +134,7 @@ var pad = function ( number, length ) {
 };
 
 var codeToolbar = function() {
+  if (embedded) return;
   toolbar(
     buttonUpdate(),
     buttonHide(),
@@ -369,6 +376,7 @@ var menuShare = function() {
 
 // popup
 var popup = ( function () {
+  if (embedded) return;
   var scope = this;
 
   var element = document.getElementById( 'popup' );

@@ -1,6 +1,6 @@
-code-editor
-===========
+ICE Code Editor
+===============
 
-Simple editor for messing around.
+The code editor used in (3D Game Programming for Kids)[http://gamingjs.com].
 
-<http://mrdoob.com/projects/code-editor/>
+A very hacked up fork from Mr.doob's (htmleditor)[http://mrdoob.com/projects/htmleditor/.]
