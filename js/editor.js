@@ -45,6 +45,24 @@ var documents = ( localStorage.codeeditor !== undefined ) ?
 var EDIT_ONLY = window.location.search.indexOf('?e') > -1;
 var GAME_MODE = window.location.search.indexOf('?g') > -1;
 
+var scripts_nodelist = document.getElementsByTagName('script'),
+    scripts = Array.prototype.slice.call(scripts_nodelist),
+    ice_samples = scripts.filter(function(s) {
+      return s.type == 'text/ice-code';
+    });
+
+var sourcecode;
+if (ice_samples.length > 0) {
+  var script = ice_samples[0];
+
+  script.insertAdjacentHTML('beforebegin', '<div id=ice></div>');
+  sourcecode = script.innerText.
+    replace(/^-(\w+)(.*?)\s*\{([\s\S]+)-\}.*$/gm, "\n<$1$2>$3</$1>").
+    replace(/^-(\w+)(.*)$/gm, "<$1$2></$1>").
+    replace(/^\s+/, '').
+    replace(/\s+$/, '');
+  embedded = true;
+}
 var ice_parent = document.getElementById('ice') || document.body,
     embedded = !!document.getElementById('ice');
 
@@ -817,25 +835,33 @@ var syncStore = function() {
 var update = function () {
   if (EDIT_ONLY) return;
 
-  while ( preview.children.length > 0 ) {
+  var iframe;
+  if ( preview.children.length > 0 ) {
+    console.log(preview);
+    iframe = frames[0];
+    iframe.document.body.innerHTML = editor.getValue();
+  }
+  else {
+    iframe = document.createElement( 'iframe' );
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    preview.appendChild( iframe );
+    var content = iframe.contentDocument || iframe.contentWindow.document;
 
-    preview.removeChild( preview.firstChild );
+    content.open();
+    content.write(
+      '<html manifest="http://localhost:3000/editor.appcache">' +
+        '<body>' +
+          editor.getValue() +
+        '</body>' +
+      '</html>'
+    );
+    content.close();
 
+    content.body.style.margin = '0';
   }
 
-  var iframe = document.createElement( 'iframe' );
-  iframe.style.width = '100%';
-  iframe.style.height = '100%';
-  iframe.style.border = '0';
-  preview.appendChild( iframe );
-
-  var content = iframe.contentDocument || iframe.contentWindow.document;
-
-  content.open();
-  content.write( editor.getValue() );
-  content.close();
-
-  content.body.style.margin = '0';
 };
 
 var changeProject = function(filename) {
@@ -940,7 +966,12 @@ if ( window.location.hash ) {
 
 }
 
-setContent((documents.length > 0) ? documents[0].code : templates[0].code);
+if (sourcecode) {
+  setContent(sourcecode);
+}
+else {
+  setContent((documents.length > 0) ? documents[0].code : templates[0].code);
+}
 
 codeToolbar();
 if (GAME_MODE) hideCode();
