@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>code editor</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="editor.css">
+    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ace/keybinding-emacs.js"></script>
+    <script src="js/rawinflate.js"></script>
+    <script src="js/rawdeflate.js"></script>
+    <script src="js/appcache.js"></script>
+  </head>
+  <body>
+    <div id="content">
+<p>Lebowski ipsum i'll get you a toe by this afternoon —with nail polish. Dolor sit amet, consectetur adipiscing elit praesent ac magna. Mr. Lebowski is in seclusion in the West Wing. Justo pellentesque ac lectus quis elit blandit. WE HAVE BUNNY. GATHER ONE MILLION DOLLARS IN UNMARKED NON-CONSECUTIVE TWENTIES. AWAIT INSTRUCTIONS. NO FUNNY STUFF. Fringilla a ut turpis. It's a complicated case, Maude. Lotta ins. Lotta outs. And a lotta strands to keep in my head, man. Praesent felis ligula, malesuada suscipit malesuada non, ultrices non urna sed orci ipsum, placerat.</p>
+
+<script type="text/ice-code">
+-body
+-script src="http://gamingJS.com/Three.js"
+-script src="http://gamingJS.com/Tween.js"
+-script src="http://gamingJS.com/ChromeFixes.js"
+-script{
+  // This is where stuff in our game will happen:
+  var scene = new THREE.Scene();
+
+  // This is what sees the stuff:
+  var aspect_ratio = window.innerWidth / window.innerHeight;
+  var camera = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 20000);
+  camera.position.z = 500;
+  scene.add(camera);
+
+  // This will draw what the camera sees onto the screen:
+  var renderer = new THREE.CanvasRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // ******** START CODING ON THE NEXT LINE ********
+
+  var faces = 5;
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(10000, 10000, faces, faces),
+    new THREE.MeshNormalMaterial()
+  );
+  ground.rotation.x = -Math.PI/2;
+  ground.position.y = -170;
+
+  var vertices = ground.geometry.vertices;
+  for (var i=0; i<=faces; i++) {
+    // The third row of vertices should have same Y as the second
+    //vertices[2*(faces+1) + i].y = vertices[1*(faces+1) + i].y;
+    tweenVertex(vertices[2*(faces+1) + i], 'y', vertices[1*(faces+1) + i].y);
+
+    // The fourth row of vertices should have same Y as the fifth
+    //vertices[3*(faces+1) + i].y = vertices[4*(faces+1) + i].y;
+    tweenVertex(vertices[3*(faces+1) + i], 'y', vertices[4*(faces+1) + i].y);
+
+    // The third column of vertices should have same X as the second
+    //vertices[i*(faces+1) + 2].x = vertices[i*(faces+1) + 1].x;
+    tweenVertex(vertices[i*(faces+1) + 2], 'x', vertices[i*(faces+1) + 1].x);
+
+    // The fourth column of vertices should have same X as the fifth
+    //vertices[i*(faces+1) + 3].x = vertices[i*(faces+1) + 4].x;
+    tweenVertex(vertices[i*(faces+1) + 3], 'x', vertices[i*(faces+1) + 4].x);
+  }
+
+  function tweenVertex(vertex, dim, end) {
+    new TWEEN
+      .Tween({loc: vertex[dim]})
+      .to({loc: end}, 8*1000)
+      .onUpdate(function () {
+        vertex[dim] = this.loc;
+      })
+      .start();
+  }
+
+
+  // (-1000, 1000, 0)
+  //ground.geometry.vertices[14].x = ground.geometry.vertices[14 - 6 - 1].x;
+  //ground.geometry.vertices[14].y = ground.geometry.vertices[14 - 6 - 1].y;
+  //ground.geometry.vertices[14].z = -1000;
+  tweenDepth(ground.geometry.vertices[14], -1000);
+
+  // (1000, 1000, 0)
+  //ground.geometry.vertices[15].x = ground.geometry.vertices[14 - 6 + 1].x;
+  //ground.geometry.vertices[15].y = ground.geometry.vertices[14 - 6 + 1].y;
+  //ground.geometry.vertices[15].z = -1000;
+  tweenDepth(ground.geometry.vertices[15], -1000);
+
+  // (-1000, -1000, 0)
+  //ground.geometry.vertices[20].x = -3000;
+  //ground.geometry.vertices[20].y = -3000;
+  //ground.geometry.vertices[20].z = -1000;
+  tweenDepth(ground.geometry.vertices[20], -1000);
+
+  // (1000, 1000, 0)
+  //ground.geometry.vertices[21].z = -1000;
+  tweenDepth(ground.geometry.vertices[21], -1000);
+
+  function tweenDepth(vertex, depth) {
+    new TWEEN
+      .Tween({amount: 0})
+      .to({amount: depth}, 8*1000)
+      .onUpdate(function () {
+        vertex.z = this.amount;
+      })
+      .start();
+  }
+
+
+  ground.material.wireframe = true;
+
+  scene.add(ground);
+
+  camera.position.set(5000, 5000, 5000);
+  camera.lookAt(new THREE.Vector3(0,0,0));
+
+  // Now, show what the camera sees on the screen:
+  function animate() {
+    requestAnimationFrame(animate);
+    TWEEN.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+-}
+</script>
+
+<p>One a those days, huh. Wal, a wiser fella than m'self once said, sometimes you eat the bar and sometimes the bar, wal, he eats you. Id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at dignissim magna. Walter, this isn't a First Amendment thing. Ullamcorper in aliquam sagittis massa ac tortor ultrices faucibus curabitur eu. No, look. I do mind. The Dude minds. This will not stand, you know, this aggression will not stand, man. Mi sapien, ut ultricies ipsum morbi eget risus nulla nullam vel nisi.</p>
+
+<p>I'm not Mr. Lebowski; you're Mr. Lebowski. I'm the Dude. Enim, vel auctor ante morbi. Is this yours, Larry? Is this your homework, Larry? Id urna vel felis lacinia placerat vestibulum turpis nulla, viverra nec volutpat ac. Hardly Dude, a new 'vette? The kid's still got, oh, 96 to 97 thousand, depending on the options. Ornare id lectus cras pharetra faucibus tristique nullam non accumsan justo nulla facilisi.</p>
+    </div>
+  </body>
+<style>
+#content { width: 600px }
+</style>
+
+  <script src="js/ice-editor.js"></script>
+  <script src="js/ice-embeded.js"></script>
+  <script>ICE.attachEmbedded();</script>
+</html>

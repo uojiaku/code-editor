@@ -124,11 +124,11 @@ ul.menu li {
 	background: rgba(0,0,255,0.1);
 }
 
-#editor .ace_content, #editor_embed .ace_content {
+.ace_content {
 	background: rgba(255,255,255,0.75);
 }
 
-#editor .ace_scroller, #editor_embed .ace_scroller {
+.ice-editor .ace-chrome .ace_scroller, .ice-editor .ace-tm .ace_scroller {
   background-color: rgba(255,255,255,0.0);
 }
 
