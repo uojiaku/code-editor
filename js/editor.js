@@ -832,14 +832,13 @@ var syncStore = function() {
   localStorage.codeeditor = JSON.stringify( documents );
 };
 
+var embed_timeout;
 var update = function () {
   if (EDIT_ONLY) return;
 
   var iframe;
   if ( preview.children.length > 0 ) {
-    console.log(preview);
-    iframe = frames[0];
-    iframe.document.body.innerHTML = editor.getValue();
+    iframe = frames[0].frameElement;
   }
   else {
     iframe = document.createElement( 'iframe' );
@@ -847,21 +846,31 @@ var update = function () {
     iframe.style.height = '100%';
     iframe.style.border = '0';
     preview.appendChild( iframe );
-    var content = iframe.contentDocument || iframe.contentWindow.document;
-
-    content.open();
-    content.write(
-      '<html manifest="http://localhost:3000/editor.appcache">' +
-        '<body>' +
-          editor.getValue() +
-        '</body>' +
-      '</html>'
-    );
-    content.close();
-
-    content.body.style.margin = '0';
   }
 
+  var content = iframe.contentDocument || iframe.contentWindow.document;
+
+  content.open();
+  content.write(
+    '<html manifest="http://localhost:3000/editor.appcache">' +
+      '<body>' +
+        editor.getValue() +
+      '</body>' +
+    '</html>'
+  );
+  content.close();
+
+  content.body.style.margin = '0';
+
+  if (embedded) {
+    clearTimeout(embed_timeout);
+    embed_timeout = setTimeout(
+      function() {
+        iframe.parentElement.removeChild(iframe);
+      },
+      30*1000
+    );
+  }
 };
 
 var changeProject = function(filename) {
