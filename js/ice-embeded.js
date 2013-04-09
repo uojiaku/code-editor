@@ -1,5 +1,12 @@
+// IceCodeEditor.js 0.0.1
+
 (function(){
 
+// ICE.Embedded
+// ------------
+
+// Create a new embedded instance of the ICE Editor from a `script`
+// tag.
 function Embedded(script) {
   this.script = script;
   this.sourcecode = this.processSource();
@@ -13,12 +20,15 @@ function Embedded(script) {
   this.editor.onUpdate();
 }
 
+// Create the `<div>` element that will hold the editor and preview
+// layers.
 Embedded.prototype.createEmbeddedElement = function() {
   var el = document.createElement( 'div' );
   this.script.insertAdjacentElement('beforebegin', el);
   return el;
 };
 
+// Process the sourcecode from the `<script>` tag. This is ne
 Embedded.prototype.processSource = function() {
   return this.script.innerText.
     replace(/^-(\w+)(.*?)\s*\{([\s\S]+)-\}.*$/gm, "\n<$1$2>$3</$1>").
@@ -27,6 +37,9 @@ Embedded.prototype.processSource = function() {
     replace(/\s+$/, '');
 };
 
+// Start or reset the countdown before the preview layer will be
+// removed. The removal is done to prevent high/moderate CPU usage
+// from a page element.
 Embedded.prototype.timeoutPreview = function() {
   var that = this;
   clearTimeout(this.embed_timeout);
@@ -34,17 +47,19 @@ Embedded.prototype.timeoutPreview = function() {
     function() {
       that.editor.hidePreview();
     },
-    3*1000
+    60*1000
   );
 };
 
-
+// Create a new instance of the embedded code editor for each
+// `<script type=text/ice-code>` element on the page.
 function attachEmbedded() {
   iceCodeScriptTags().forEach(function (script) {
     new Embedded(script);
   });
 }
 
+// Returns a list of all `<script>` tags with `type=text/ice-code`.
 function iceCodeScriptTags() {
   var scripts_nodelist = document.getElementsByTagName('script'),
       scripts = Array.prototype.slice.call(scripts_nodelist);
@@ -54,6 +69,7 @@ function iceCodeScriptTags() {
   });
 }
 
+// Export `attachEmbedded()` on the public API for the `ICE` module.
 if (!window.ICE) ICE = {};
 ICE.attachEmbedded = attachEmbedded;
 
