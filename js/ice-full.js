@@ -11,8 +11,6 @@ function createElements() {
   var el = createIceElement();
   createPopupElement();
 
-  applyStyles();
-
   return el;
 }
 
@@ -25,6 +23,7 @@ function createIceElement() {
 function createPopupElement() {
   var el = document.createElement('div');
   el.id = "popup";
+  el.style.display = 'none';
   document.body.appendChild(el);
   return el;
 }
@@ -32,6 +31,19 @@ function createPopupElement() {
 function applyStyles() {
   document.body.style.margin = '0px';
   document.body.style.overflow = 'hidden';
+
+  editor.editor_el.style.position = 'absolute';
+  editor.editor_el.style.top = '0';
+  editor.editor_el.style.bottom = '0';
+  editor.editor_el.style.left = '0';
+  editor.editor_el.style.right = '0';
+  editor.editor_el.backgroundColor = 'rgba(255,255,255,0.0)';
+
+  editor.preview_el.style.position = 'absolute';
+  editor.preview_el.style.top = '0';
+  editor.preview_el.style.bottom = '0';
+  editor.preview_el.style.left = '0';
+  editor.preview_el.style.right = '0';
 }
 
 // toolbar
@@ -441,6 +453,10 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
+var toggle = function() {
+  editor.toggle();
+};
+
 // Display hack. Disallow Ctrl++ and Ctrl+- zooming. It causes too
 // much heartache.
 document.addEventListener( 'keydown', function ( event ) {
@@ -454,6 +470,7 @@ function attachFull() {
   var el = createElements();
   store = new ICE.Store();
   editor = new ICE.Editor(el);
+  applyStyles();
   editor.setContent(store.current.code);
   codeToolbar();
 }

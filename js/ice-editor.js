@@ -39,6 +39,26 @@ Editor.prototype.setContent = function(data) {
   this.updatePreview();
 };
 
+// Toggle the display of the editor layer.
+Editor.prototype.toggle = function() {
+  if ( this.editor_el.style.display === '' ) this.hideCode();
+  else this.showCode();
+};
+
+// Show the code layer, calling the ACE resize methods to ensure that
+// the display is correct.
+Editor.prototype.showCode = function() {
+  this.editor_el.style.display = '';
+  this.editor.renderer.onResize();
+  this.editor.focus();
+};
+
+// Hide the code layer
+Editor.prototype.hideCode = function() {
+  this.editor_el.style.display = 'none';
+  this.preview_el.children[0].focus();
+};
+
 // This hides the preview layer by removing the containing iframe
 // element from the DOM.
 Editor.prototype.hidePreview = function(){
@@ -106,16 +126,12 @@ Editor.prototype.applyStyles = function() {
 
   this.el.style.margin = '0px';
   this.el.style.overflow = 'hidden';
-  this.el.style.position = 'relative';
-  this.el.style.height = '350px';
 
   this.editor_el.style.width = '100%';
-  this.editor_el.style.height = '350px';
   this.editor_el.style.position = 'absolute';
   this.editor_el.display = 'none';
 
   this.preview_el.style.width = '100%';
-  this.preview_el.style.height = '350px';
   this.preview_el.style.position = 'absolute';
   this.preview_el.style.top = '0';
 };

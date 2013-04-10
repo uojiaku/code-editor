@@ -18,6 +18,7 @@ function Embedded(script) {
   });
   this.editor.setContent(this.sourcecode);
   this.editor.onUpdate();
+  this.applyStyles();
 }
 
 // Create the `<div>` element that will hold the editor and preview
@@ -49,6 +50,23 @@ Embedded.prototype.timeoutPreview = function() {
     },
     60*1000
   );
+};
+
+Embedded.prototype.applyStyles = function() {
+  this.editor.el.style.margin = '0px';
+  this.editor.el.style.overflow = 'hidden';
+  this.editor.el.style.position = 'relative';
+  this.editor.el.style.height = '350px';
+
+  this.editor.editor_el.style.width = '100%';
+  this.editor.editor_el.style.height = '350px';
+  this.editor.editor_el.style.position = 'absolute';
+  this.editor.editor_el.display = 'none';
+
+  this.editor.preview_el.style.width = '100%';
+  this.editor.preview_el.style.height = '350px';
+  this.editor.preview_el.style.position = 'absolute';
+  this.editor.preview_el.style.top = '0';
 };
 
 // Create a new instance of the embedded code editor for each
