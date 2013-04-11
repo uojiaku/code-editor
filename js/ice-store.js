@@ -48,15 +48,95 @@ function Store() {
 
 Store.prototype.save = function(code) {
   this.documents[0].code = code;
-  this.syncStore();
+  this.sync();
 };
 
+Store.prototype.createFromTemplate = function(name, template_name) {
+  var code = templates.
+    reduce(function(code, template) {
+      if (template.filename == template_name) return template.code;
+      return code;
+    }, undefined);
+
+  this.create(code, name);
+};
+
+Store.prototype.create = function(code, title) {
+  if (!title) title = this._nextUntitled();
+  if ( this.documents.length == 0 || this.documents[0].filename != title) {
+    this.documents.unshift({
+      filetype: 'text/plain',
+      autoupdate: this.documents[0].autoupdate
+    });
+  }
+
+  this.documents[0].filename = title;
+  this.save(code);
+};
+
+Store.prototype._nextUntitled = function() {
+  var nums = this.documents.
+    filter(function(doc) {
+      return doc.filename.match(/Untitled/);
+    }).
+    map(function(doc) {
+      return parseInt(doc.filename.replace(/Untitled\s*/, ''), 10);
+    }).
+    filter(function (num) {
+      return !isNaN(num);
+    }).
+    sort();
+
+  return 'Untitled ' + (nums.length == 0 ? 1 : nums[nums.length-1] + 1);
+};
+
+Store.prototype.remove = function(filename) {
+  var new_documents = [];
+
+  var i = 0, found;
+  while (i < this.documents.length) {
+    if (this.documents[i].filename == filename) {
+      found = this.documents[i];
+    }
+    else {
+      new_documents.push(this.documents[i]);
+    }
+    i++;
+  }
+
+  if (!found) return;
+
+  this.documents = new_documents;
+  this.sync();
+};
+
+Store.prototype.open = function(filename) {
+  var new_documents = [];
+
+  var i = 0, found;
+  while (i < this.documents.length) {
+    if (this.documents[i].filename == filename) {
+      found = this.documents[i];
+    }
+    else {
+      new_documents.push(this.documents[i]);
+    }
+    i++;
+  }
+
+  if (!found) return;
+
+  new_documents.unshift(found);
+  this.documents = new_documents;
+  this.sync();
+};
 
 Store.prototype.sync = function() {
+  this.current = this.documents[0];
   localStorage.codeeditor = JSON.stringify(this.documents);
 };
 
-
+Store.templates = templates;
 
 // Export the Store class constructor on the public API.
 if (!window.ICE) ICE = {};

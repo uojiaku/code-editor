@@ -39,6 +39,11 @@ Editor.prototype.setContent = function(data) {
   this.updatePreview();
 };
 
+Editor.prototype.getValue = function() {
+  return this.editor.getValue();
+};
+Editor.prototype.getContent = Editor.prototype.getValue;
+
 // Toggle the display of the editor layer.
 Editor.prototype.toggle = function() {
   if ( this.editor_el.style.display === '' ) this.hideCode();

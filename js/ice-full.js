@@ -1,5 +1,15 @@
 // IceCodeEditor.js 0.0.1
 
+// TODO:
+// Share
+// Download
+// Toggle buttons on hide
+// edit only
+// game mode
+// autoupdate flag
+// double preview on change project
+
+
 (function(){
 
 // ICE.Full
@@ -151,12 +161,218 @@ var buttonUpdate = function() {
 
   el.addEventListener( 'click', function ( event ) {
 
-    update();
+    editor.updatePreview();
 
   }, false );
 
   return el;
 };
+
+// Open a new dialog with buttons and everything.
+var openNewDialog = function() {
+  var newDialog = document.createElement( 'div' );
+  newDialog.id = 'new-dialog';
+  newDialog.className = 'dialog';
+  document.body.appendChild( newDialog );
+
+  var newProjectLabel = document.createElement( 'label' );
+  newProjectLabel.textContent = 'Name:';
+  newDialog.appendChild( newProjectLabel );
+
+  var newProjectField = document.createElement( 'input' );
+  newProjectField.type = 'text';
+  newProjectField.size = 30;
+  newProjectLabel.appendChild( newProjectField );
+  newProjectField.addEventListener('keypress', function(event) {
+    if (event.keyCode != 13) return;
+    store.createFromTemplate(newProjectField.value, templateField.value);
+    editor.setContent(store.current.code);
+    closeNewDialog();
+  }, false);
+
+  var buttonNewDialog = document.createElement( 'button' );
+  buttonNewDialog.className = 'button';
+  buttonNewDialog.textContent = 'Save';
+  buttonNewDialog.addEventListener( 'click', function ( event ) {
+    store.createFromTemplate(newProjectField.value, templateField.value);
+    editor.setContent(store.current.code);
+    closeNewDialog();
+  }, false );
+  newDialog.appendChild( buttonNewDialog );
+
+  var templateDiv = document.createElement( 'div' );
+  newDialog.appendChild( templateDiv );
+
+  var templateLabel = document.createElement( 'label' );
+  templateLabel.textContent = 'Template:';
+  templateDiv.appendChild( templateLabel );
+
+  var templateField = document.createElement( 'select' );
+  templateLabel.appendChild(templateField);
+  ICE.Store.templates.forEach(function(template) {
+    var optionField = document.createElement( 'option' );
+    optionField.textContent = template.filename;
+    templateField.appendChild(optionField);
+  });
+
+  var closeNewP = document.createElement( 'p' );
+  closeNewP.className = 'cancel';
+  newDialog.appendChild( closeNewP );
+
+  var closeNewLink = document.createElement( 'a' );
+  closeNewLink.href = '#';
+  closeNewLink.textContent = '[ close ]';
+  closeNewLink.addEventListener( 'click', function ( event ) {
+
+    closeNewDialog();
+    event.stopPropagation();
+    event.preventDefault();
+
+  }, false );
+  closeNewP.appendChild( closeNewLink );
+
+  newProjectField.focus();
+};
+
+var closeNewDialog = function() {
+  var dialog = document.getElementById('new-dialog');
+  if ( ! dialog ) return;
+
+  dialog.parentElement.removeChild(dialog);
+};
+
+var openProjectsDialog = function() {
+  closeProjectsDialog();
+
+  var projectsDialog = document.createElement( 'div' );
+  projectsDialog.id = 'projects-dialog';
+  projectsDialog.className = 'dialog';
+  document.body.appendChild( projectsDialog );
+
+  store.documents.forEach(function(doc) {
+    projectsDialog.appendChild(projectsDialogRow(doc));
+  });
+
+  var closeP = document.createElement( 'p' );
+  closeP.className = 'cancel';
+  projectsDialog.appendChild( closeP );
+
+  var closeLink = document.createElement( 'a' );
+  closeLink.href = '#';
+  closeLink.textContent = '[ close ]';
+  closeLink.addEventListener( 'click', function ( event ) {
+
+    closeProjectsDialog();
+    event.stopPropagation();
+    event.preventDefault();
+
+  }, false );
+  closeP.appendChild( closeLink );
+};
+
+var projectsDialogRow = function(doc) {
+  var row = document.createElement( 'p' );
+
+  var link = document.createElement( 'a' );
+  link.href = '#';
+  link.textContent = doc.filename;
+  link.addEventListener( 'click', function ( event ) {
+    store.open(doc.filename);
+    editor.setContent(store.current.code);
+    closeProjectsDialog();
+    event.stopPropagation();
+    event.preventDefault();
+
+  }, false );
+  row.appendChild(link);
+  row.appendChild(document.createTextNode(' '));
+
+  var del = document.createElement( 'a' );
+  del.href = '#';
+  del.textContent = '[delete]';
+  del.className = 'delete';
+  del.addEventListener( 'click', function ( event ) {
+    var message =
+      'Once a project is deleted, there is no way to get it back. ' +
+      'Are you sure that you want to delete "' + doc.filename + '"?';
+
+    if (confirm(message)) {
+      store.remove(doc.filename);
+      editor.setContent(store.current.code);
+      openProjectsDialog();
+    }
+    event.stopPropagation();
+    event.preventDefault();
+
+  }, false );
+  row.appendChild(del);
+
+  return row;
+};
+
+var closeProjectsDialog = function() {
+  var dialog = document.getElementById('projects-dialog');
+  if ( ! dialog ) return;
+
+  dialog.parentElement.removeChild(dialog);
+};
+
+var openMakeCopyDialog = function() {
+  var saveDialog = document.createElement( 'div' );
+  saveDialog.id = 'save-dialog';
+  saveDialog.className = 'dialog';
+  document.body.appendChild( saveDialog );
+
+  var saveFileLabel = document.createElement( 'label' );
+  saveFileLabel.textContent = 'Name:';
+  saveDialog.appendChild( saveFileLabel );
+
+  var saveFileField = document.createElement( 'input' );
+  saveFileField.type = 'text';
+  saveFileField.size = 30;
+  saveFileField.value = store.current.filename;
+  saveFileLabel.appendChild( saveFileField );
+  saveFileField.addEventListener('keypress', function(event) {
+    if (event.keyCode != 13) return;
+    store.create(editor.getValue(), saveFileField.value);
+    editor.setContent(store.current.code);
+    closeMakeCopyDialog();
+  }, false);
+
+  var buttonSaveDialog = document.createElement( 'button' );
+  buttonSaveDialog.className = 'button';
+  buttonSaveDialog.textContent = 'Save';
+  buttonSaveDialog.addEventListener( 'click', function ( event ) {
+    store.create(editor.getValue(), saveFileField.value);
+    editor.setContent(store.current.code);
+    closeMakeCopyDialog();
+  }, false );
+  saveDialog.appendChild( buttonSaveDialog );
+
+  var closeSaveP = document.createElement( 'p' );
+  closeSaveP.className = 'cancel';
+  saveDialog.appendChild( closeSaveP );
+
+  var closeSaveLink = document.createElement( 'a' );
+  closeSaveLink.href = '#';
+  closeSaveLink.textContent = '[ close ]';
+  closeSaveLink.addEventListener( 'click', function ( event ) {
+    closeMakeCopyDialog();
+    event.stopPropagation();
+    event.preventDefault();
+  }, false );
+  closeSaveP.appendChild( closeSaveLink );
+
+  saveFileField.focus();
+};
+
+var closeMakeCopyDialog = function() {
+  var dialog = document.getElementById('save-dialog');
+  if (!dialog) return;
+
+  dialog.parentElement.removeChild(dialog);
+};
+
 
 var menuMakeCopy = function() {
   var el = document.createElement( 'li' );
@@ -174,9 +390,7 @@ var menuSave = function() {
   var el = document.createElement( 'li' );
   el.textContent = 'save';
   el.addEventListener( 'click', function ( event ) {
-
-    save();
-
+    store.save(editor.getValue());
   }, false );
 
   return el;
@@ -395,8 +609,6 @@ var buttonCodeMenu = function() {
 };
 
 
-
-
 document.addEventListener( 'keypress', function ( event ) {
   if ( event.keyCode === 9829 ) { // <3
     event.preventDefault();
@@ -413,14 +625,12 @@ document.addEventListener( 'keydown', function ( event ) {
   if ( event.keyCode === 83 && ( event.ctrlKey === true || event.metaKey === true ) ) {
 
     event.preventDefault();
-    save();
+    store.save(editor.getValue());
 
   }
 
   if ( event.keyCode === 13 && ( event.ctrlKey === true || event.metaKey === true ) ) {
-
-    update();
-
+    editor.updatePreview();
   }
 
   if ( event.keyCode === 27 ) { // ESC
@@ -454,6 +664,7 @@ document.addEventListener( 'keydown', function ( event ) {
 }, false );
 
 var toggle = function() {
+  // TODO: toggle buttons too
   editor.toggle();
 };
 
