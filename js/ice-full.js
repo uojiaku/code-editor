@@ -557,6 +557,14 @@ function openPopupDialog(content) {
   window.addEventListener( 'resize', hide, false );
 }
 
+var download = function(el) {
+  var blob = new Blob( [ editor.getValue() ], { type: store.current.filetype } );
+  var objectURL = URL.createObjectURL( blob );
+
+  el.href = objectURL;
+
+  el.download = store.current.filename;
+};
 
 var buttonHide = function() {
   var el = document.createElement( 'button' );
