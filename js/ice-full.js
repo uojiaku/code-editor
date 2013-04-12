@@ -1,7 +1,6 @@
 // IceCodeEditor.js 0.0.1
 
 // TODO:
-// Share
 // Download
 // autoupdate flag
 // double preview on change project
@@ -451,7 +450,7 @@ var menuShare = function() {
   el.addEventListener( 'click', function ( event ) {
 
     var input = document.createElement( 'input' );
-    input.value = 'http://gamingjs.com/ice/#B/' + encode( editor.getValue() );
+    input.value = 'http://gamingjs.com/ice/#B/' + store.currentEncoded();
     input.style.width = '400px';
     input.style.padding = '5px';
     input.style.border = '0px';
@@ -460,10 +459,10 @@ var menuShare = function() {
     toggle_game_mode.type = 'checkbox';
     toggle_game_mode.addEventListener('change', function() {
       if (this.checked) {
-        input.value = 'http://gamingjs.com/ice/?g#B/' + encode( editor.getValue() );
+        input.value = 'http://gamingjs.com/ice/?g#B/' + store.currentEncoded();
       }
       else {
-        input.value = 'http://gamingjs.com/ice/#B/' + encode( editor.getValue() );
+        input.value = 'http://gamingjs.com/ice/#B/' + store.currentEncoded();
       }
       input.focus();
       input.select();
@@ -546,17 +545,16 @@ function openPopupDialog(content) {
     return svg;
   } )();
 
+  var that = this;
   buttonClose.style.position = 'absolute';
   buttonClose.style.top = '5px';
   buttonClose.style.right = '5px';
   buttonClose.style.cursor = 'pointer';
-  buttonClose.addEventListener( 'click', function ( event ) {
-    scope.hide();
-  }, false );
+  buttonClose.addEventListener( 'click', hide, false );
   el.appendChild( buttonClose );
 
   window.addEventListener( 'load', update, false );
-  window.addEventListener( 'resize', function() {scope.hide();}, false );
+  window.addEventListener( 'resize', hide, false );
 }
 
 

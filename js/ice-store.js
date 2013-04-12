@@ -131,6 +131,11 @@ Store.prototype.open = function(filename) {
   this.sync();
 };
 
+// The current document, encoded. Mostly useful for sharing.
+Store.prototype.currentEncoded = function() {
+  return encode(this.current.code);
+};
+
 Store.prototype.sync = function() {
   this.current = this.documents[0];
   localStorage.codeeditor = JSON.stringify(this.documents);
