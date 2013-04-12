@@ -26,16 +26,18 @@ function Editor(el, options) {
 
 // This will replace the content in the editor layer with the supplied
 // `data`.
+
+var handle_change;
 Editor.prototype.setContent = function(data) {
   var that = this;
-  function handleChange() {
+  if (!handle_change) handle_change = function() {
     that.resetUpdateTimer();
-  }
+  };
 
-  this.editor.getSession().removeListener('change', handleChange);
+  this.editor.getSession().removeListener('change', handle_change);
   this.editor.setValue(data, -1);
   this.editor.getSession().setUndoManager(new UndoManager());
-  this.editor.getSession().on('change', handleChange);
+  this.editor.getSession().on('change', handle_change);
   this.updatePreview();
 };
 

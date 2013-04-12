@@ -1,10 +1,8 @@
 // IceCodeEditor.js 0.0.1
 
 // TODO:
-// Download
 // autoupdate flag
-// double preview on change project
-
+// has no method 'simulate' when switching project
 
 (function(){
 
