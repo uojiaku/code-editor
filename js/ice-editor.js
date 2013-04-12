@@ -70,6 +70,8 @@ Editor.prototype.showCode = function() {
 // Hide the code layer
 Editor.prototype.hideCode = function() {
   this.editor_el.style.display = 'none';
+  if (this.edit_only) return;
+
   this.preview_el.children[0].focus();
 };
 

@@ -3,8 +3,6 @@
 // TODO:
 // Share
 // Download
-// edit only
-// game mode
 // autoupdate flag
 // double preview on change project
 
@@ -15,6 +13,8 @@
 // --------
 
 var store, editor;
+
+var EDIT_ONLY, GAME_MODE;
 
 function createElements() {
   var el = createIceElement();
@@ -684,11 +684,25 @@ document.addEventListener( 'keydown', function ( event ) {
 
 function attachFull() {
   var el = createElements();
+  setFlags();
   store = new ICE.Store();
-  editor = new ICE.Editor(el);
+  editor = new ICE.Editor(el, {edit_only: EDIT_ONLY});
   applyStyles();
   editor.setContent(store.current.code);
-  codeToolbar();
+
+  if (GAME_MODE) {
+    shortCodeToolbar();
+    editor.hideCode();
+  }
+  else {
+    codeToolbar();
+  }
+}
+
+// Set global flags for use throughout the full screen editor.
+function setFlags() {
+  EDIT_ONLY = window.location.search.indexOf('?e') > -1;
+  GAME_MODE = window.location.search.indexOf('?g') > -1;
 }
 
 // Export `attachFull()` on the public API for the `ICE` module.
