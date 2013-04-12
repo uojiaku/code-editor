@@ -3,7 +3,6 @@
 // TODO:
 // Share
 // Download
-// Toggle buttons on hide
 // edit only
 // game mode
 // autoupdate flag
@@ -663,9 +662,15 @@ document.addEventListener( 'keydown', function ( event ) {
 
 }, false );
 
+// Toggle between editor + preview layer and just the preview layer.
 var toggle = function() {
-  // TODO: toggle buttons too
   editor.toggle();
+  if (editor.isEditorVisible()) {
+    codeToolbar();
+  }
+  else {
+    shortCodeToolbar();
+  }
 };
 
 // Display hack. Disallow Ctrl++ and Ctrl+- zooming. It causes too

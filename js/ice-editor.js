@@ -46,8 +46,17 @@ Editor.prototype.getContent = Editor.prototype.getValue;
 
 // Toggle the display of the editor layer.
 Editor.prototype.toggle = function() {
-  if ( this.editor_el.style.display === '' ) this.hideCode();
-  else this.showCode();
+  if (this.isEditorVisible()) {
+    this.hideCode();
+  }
+  else {
+    this.showCode();
+  }
+};
+
+// Predicate method to determine is the editor is currently visible
+Editor.prototype.isEditorVisible = function() {
+  return this.editor_el.style.display === '';
 };
 
 // Show the code layer, calling the ACE resize methods to ensure that
