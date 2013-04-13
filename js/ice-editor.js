@@ -108,16 +108,16 @@ Editor.prototype.resetUpdateTimer = function() {
 Editor.prototype.updatePreview = function() {
   if (this.edit_only) return;
 
+  while (this.preview_el.children.length > 0) {
+    this.preview_el.removeChild(this.preview_el.firstChild);
+  }
+
   var iframe = this.getPreviewIframe();
   var content = iframe.contentDocument || iframe.contentWindow.document;
 
   content.open();
   content.write(
-    '<html manifest="http://localhost:3000/editor.appcache">' +
-      '<body>' +
-        this.editor.getValue() +
-      '</body>' +
-    '</html>'
+    this.editor.getValue()
   );
   content.close();
 
