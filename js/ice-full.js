@@ -1,7 +1,6 @@
 // IceCodeEditor.js 0.0.1
 
 // TODO:
-// autoupdate flag
 // has no method 'simulate' when switching project
 
 (function(){
@@ -140,7 +139,12 @@ var buttonUpdate = function() {
   var checkbox = document.createElement( 'input' );
   checkbox.type = 'checkbox';
 
-  if ( !store || store.is_new || store.current.autoupdate === true ) checkbox.checked = true;
+  if ( !store || store.is_new || store.current.autoupdate === true ) {
+    checkbox.checked = true;
+  }
+  else {
+    editor.autoupdate = false;
+  }
 
   checkbox.style.margin = '-4px 4px -4px 0px';
   checkbox.addEventListener( 'click', function ( event ) {
@@ -149,6 +153,8 @@ var buttonUpdate = function() {
 
     store.current.autoupdate = store.current.autoupdate === false;
     store.sync();
+
+    editor.autoupdate = store.current.autoupdate;
 
   }, false );
 

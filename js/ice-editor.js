@@ -15,7 +15,10 @@ function Editor(el, options) {
   this.el = el;
 
   if (typeof(options) != "object") options = {};
-  this.edit_only = !!options.edit_only;
+  this.edit_only = options.hasOwnProperty('edit_only') ?
+    !!options.edit_only : false;
+  this.autoupdate = options.hasOwnProperty('autoupdate') ?
+    !!options.autoupdate : true;
   this.onUpdate = options.onUpdate || function(){};
 
   this.preview_el = this.createPreviewElement();
@@ -89,8 +92,11 @@ Editor.prototype.hidePreview = function(){
 // to coding. They can also cause problems with memory or performance
 // in the browser. The timeout is 1.5 seconds.
 Editor.prototype.resetUpdateTimer = function() {
-  var that = this;
+  if (!this.autoupdate) return;
+
   clearTimeout(this.update_timer);
+
+  var that = this;
   this.update_timer = setTimeout(
     function() { that.updatePreview(); that.update_timer = undefined; },
     1.5 * 1000
