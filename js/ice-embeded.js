@@ -7,14 +7,17 @@
 
 // Create a new embedded instance of the ICE Editor from a `script`
 // tag.
-function Embedded(script) {
+function Embedded(script, options) {
   this.script = script;
+  if (!options) options = {};
+
   this.sourcecode = this.processSource();
   this.el = this.createEmbeddedElement();
 
   var that = this;
   this.editor = new ICE.Editor(this.el, {
-    onUpdate: function() {that.timeoutPreview();}
+    onUpdate: function() {that.timeoutPreview();},
+    title: options.title
   });
   this.editor.setContent(this.sourcecode);
   this.editor.onUpdate();
@@ -72,8 +75,10 @@ Embedded.prototype.applyStyles = function() {
 // Create a new instance of the embedded code editor for each
 // `<script type=text/ice-code>` element on the page.
 function attachEmbedded() {
+  var i = 0;
   iceCodeScriptTags().forEach(function (script) {
-    new Embedded(script);
+    new Embedded(script, {title: "script-00"+i});
+    i++;
   });
 }
 
