@@ -20,6 +20,7 @@ function Editor(el, options) {
   this.autoupdate = options.hasOwnProperty('autoupdate') ?
     !!options.autoupdate : true;
   this.onUpdate = options.onUpdate || function(){};
+  this.title = options.title;
 
   this.preview_el = this.createPreviewElement();
   this.editor_el = this.createEditorElement();
@@ -29,18 +30,18 @@ function Editor(el, options) {
 
 // This will replace the content in the editor layer with the supplied
 // `data`.
-
-var handle_change;
 Editor.prototype.setContent = function(data) {
   var that = this;
-  if (!handle_change) handle_change = function() {
-    that.resetUpdateTimer();
-  };
+  if (!this.handle_change) {
+    this.handle_change = function() {
+      that.resetUpdateTimer();
+    };
+  }
 
-  this.editor.getSession().removeListener('change', handle_change);
+  this.editor.getSession().removeListener('change', this.handle_change);
   this.editor.setValue(data, -1);
   this.editor.getSession().setUndoManager(new UndoManager());
-  this.editor.getSession().on('change', handle_change);
+  this.editor.getSession().on('change', this.handle_change);
   this.updatePreview();
 };
 
@@ -82,10 +83,12 @@ Editor.prototype.hideCode = function() {
 
 // This hides the preview layer by removing the containing iframe
 // element from the DOM.
-Editor.prototype.hidePreview = function(){
-  var iframe = this.getPreviewIframe();
-  iframe.parentElement.removeChild(iframe);
+Editor.prototype.removePreview = function(){
+  while (this.preview_el.children.length > 0) {
+    this.preview_el.removeChild(this.preview_el.firstChild);
+  }
 };
+Editor.prototype.hidePreview = Editor.prototype.removePreview;
 
 // Resets the timeout that delays code updates from being seen in the
 // preview layer. Immediate updates can be obtrusive / not condusive
@@ -98,7 +101,10 @@ Editor.prototype.resetUpdateTimer = function() {
 
   var that = this;
   this.update_timer = setTimeout(
-    function() { that.updatePreview(); that.update_timer = undefined; },
+    function() {
+      that.updatePreview();
+      that.update_timer = undefined;
+    },
     1.5 * 1000
   );
 };
@@ -108,11 +114,8 @@ Editor.prototype.resetUpdateTimer = function() {
 Editor.prototype.updatePreview = function() {
   if (this.edit_only) return;
 
-  while (this.preview_el.children.length > 0) {
-    this.preview_el.removeChild(this.preview_el.firstChild);
-  }
-
-  var iframe = this.getPreviewIframe();
+  this.removePreview();
+  var iframe = this.createPreviewIframe();
   var content = iframe.contentDocument || iframe.contentWindow.document;
 
   content.open();
@@ -127,19 +130,12 @@ Editor.prototype.updatePreview = function() {
 
 // Getter for the current preview iframe element. If no preview iframe
 // exists, a new one will be created.
-Editor.prototype.getPreviewIframe = function() {
-  var iframe;
-  if (this.preview_el.children.length > 0 ) {
-    // TOOD: multiples
-    iframe = frames[0].frameElement;
-  }
-  else {
-    iframe = document.createElement( 'iframe' );
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = '0';
-    this.preview_el.appendChild( iframe );
-  }
+Editor.prototype.createPreviewIframe = function() {
+  var iframe = document.createElement( 'iframe' );
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = '0';
+  this.preview_el.appendChild( iframe );
 
   return iframe;
 };
