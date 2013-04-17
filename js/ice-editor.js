@@ -22,7 +22,7 @@ function Editor(el, options) {
   this.onUpdate = options.onUpdate || function(){};
   this.title = options.title;
 
-  this.preview_el = this.createPreviewElement();
+  this.preview_el = options.preview_el || this.createPreviewElement();
   this.editor_el = this.createEditorElement();
   this.editor = this.initializeAce();
   this.applyStyles();
@@ -147,13 +147,7 @@ Editor.prototype.applyStyles = function() {
   this.el.style.margin = '0px';
   this.el.style.overflow = 'hidden';
 
-  this.editor_el.style.width = '100%';
-  this.editor_el.style.position = 'absolute';
   this.editor_el.display = 'none';
-
-  this.preview_el.style.width = '100%';
-  this.preview_el.style.position = 'absolute';
-  this.preview_el.style.top = '0';
 };
 
 // Create a DOM element to hold the preview layer.

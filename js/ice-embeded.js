@@ -13,14 +13,22 @@ function Embedded(script, options) {
 
   this.sourcecode = this.processSource();
   this.el = this.createEmbeddedElement();
+  this.overlay = !options.preview_el;
 
   var that = this;
   this.editor = new ICE.Editor(this.el, {
+    preview_el: options.preview_el,
     onUpdate: function() {that.timeoutPreview();},
     title: options.title
   });
   this.editor.setContent(this.sourcecode);
   this.editor.onUpdate();
+  this.attributesFromSource();
+
+  if (this.line) {
+    this.editor.editor.scrollToLine(this.line);
+  }
+
   this.applyStyles();
 }
 
@@ -41,6 +49,10 @@ Embedded.prototype.processSource = function() {
     replace(/\s+$/, '');
 };
 
+Embedded.prototype.attributesFromSource = function() {
+  this.line = this.script.attributes.line.value;
+};
+
 // Start or reset the countdown before the preview layer will be
 // removed. The removal is done to prevent high/moderate CPU usage
 // from a page element.
@@ -56,20 +68,20 @@ Embedded.prototype.timeoutPreview = function() {
 };
 
 Embedded.prototype.applyStyles = function() {
-  this.editor.el.style.margin = '0px';
-  this.editor.el.style.overflow = 'hidden';
-  this.editor.el.style.position = 'relative';
+  if (this.overlay) {
+    this.editor.el.style.position = 'relative';
+    this.editor.editor_el.style.position = 'absolute';
+    this.editor.preview_el.style.position = 'absolute';
+    this.editor.preview_el.style.top = '0';
+  }
+
   this.editor.el.style.height = '350px';
 
   this.editor.editor_el.style.width = '100%';
   this.editor.editor_el.style.height = '350px';
-  this.editor.editor_el.style.position = 'absolute';
-  this.editor.editor_el.display = 'none';
 
   this.editor.preview_el.style.width = '100%';
   this.editor.preview_el.style.height = '350px';
-  this.editor.preview_el.style.position = 'absolute';
-  this.editor.preview_el.style.top = '0';
 };
 
 // Create a new instance of the embedded code editor for each
@@ -95,5 +107,6 @@ function iceCodeScriptTags() {
 // Export `attachEmbedded()` on the public API for the `ICE` module.
 if (!window.ICE) ICE = {};
 ICE.attachEmbedded = attachEmbedded;
+ICE.Embedded = Embedded;
 
 })();
