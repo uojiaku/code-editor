@@ -42,13 +42,19 @@ Editor.prototype.setContent = function(data) {
   this.editor.setValue(data, -1);
   this.editor.getSession().setUndoManager(new UndoManager());
   this.editor.getSession().on('change', this.handle_change);
-  this.updatePreview();
+  // Let the browser render elements before preview so that preview
+  // size can be properly determined
+  setTimeout(function(){that.updatePreview();},0);
 };
 
 Editor.prototype.getValue = function() {
   return this.editor.getValue();
 };
 Editor.prototype.getContent = Editor.prototype.getValue;
+
+Editor.prototype.scrollToLine = function(line) {
+  this.editor.scrollToLine(line-1);
+};
 
 // Toggle the display of the editor layer.
 Editor.prototype.toggle = function() {
@@ -132,8 +138,8 @@ Editor.prototype.updatePreview = function() {
 // exists, a new one will be created.
 Editor.prototype.createPreviewIframe = function() {
   var iframe = document.createElement( 'iframe' );
-  iframe.style.width = '100%';
-  iframe.style.height = '100%';
+  iframe.width = this.preview_el.clientWidth;
+  iframe.height = this.preview_el.clientHeight;
   iframe.style.border = '0';
   this.preview_el.appendChild( iframe );
 

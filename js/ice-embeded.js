@@ -26,7 +26,7 @@ function Embedded(script, options) {
   this.attributesFromSource();
 
   if (this.line) {
-    this.editor.editor.scrollToLine(this.line);
+    this.editor.scrollToLine(this.line);
   }
 
   this.applyStyles();
@@ -35,14 +35,15 @@ function Embedded(script, options) {
 // Create the `<div>` element that will hold the editor and preview
 // layers.
 Embedded.prototype.createEmbeddedElement = function() {
-  var el = document.createElement( 'div' );
-  this.script.insertAdjacentElement('beforebegin', el);
-  return el;
+  this.script.insertAdjacentHTML('beforebegin', '<div>');
+  return this.script.previousSibling;
 };
 
-// Process the sourcecode from the `<script>` tag. This is ne
+// Process the sourcecode from the `<script>` tag. This needs to embed
+// other `<script>` tags as `-script` since browsers will close an
+// opening `<script>` tag with the first `</script>` tag seen.
 Embedded.prototype.processSource = function() {
-  return this.script.innerText.
+  return this.script.textContent.
     replace(/^-(\w+)(.*?)\s*\{([\s\S]+)-\}.*$/gm, "\n<$1$2>$3</$1>").
     replace(/^-(\w+)(.*)$/gm, "<$1$2></$1>").
     replace(/^\s+/, '').
