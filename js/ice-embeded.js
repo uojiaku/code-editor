@@ -51,7 +51,7 @@ Embedded.prototype.processSource = function() {
 };
 
 Embedded.prototype.attributesFromSource = function() {
-  this.line = this.script.attributes.line.value;
+  this.line = this.script.attributes.line ? this.script.attributes.line.value : 0;
 };
 
 // Start or reset the countdown before the preview layer will be
@@ -64,7 +64,7 @@ Embedded.prototype.timeoutPreview = function() {
     function() {
       that.editor.hidePreview();
     },
-    60*1000
+    2*60*1000
   );
 };
 

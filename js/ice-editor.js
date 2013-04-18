@@ -141,7 +141,13 @@ Editor.prototype.createPreviewIframe = function() {
   iframe.width = this.preview_el.clientWidth;
   iframe.height = this.preview_el.clientHeight;
   iframe.style.border = '0';
+
   this.preview_el.appendChild( iframe );
+
+  iframe.contentWindow.resizeTo(
+    this.preview_el.clientWidth,
+    this.preview_el.clientHeight
+  );
 
   return iframe;
 };
