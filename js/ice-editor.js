@@ -126,6 +126,7 @@ Editor.prototype.updatePreview = function() {
 
   content.open();
   content.write(
+    "<body></body>" + 
     this.editor.getValue()
   );
   content.close();

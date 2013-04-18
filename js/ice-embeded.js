@@ -43,11 +43,24 @@ Embedded.prototype.createEmbeddedElement = function() {
 // other `<script>` tags as `-script` since browsers will close an
 // opening `<script>` tag with the first `</script>` tag seen.
 Embedded.prototype.processSource = function() {
-  return this.script.textContent.
+  var ret = this.script.textContent;
+
+  // Strip opening newline
+  ret = ret.
+    replace(/\n/, '');
+
+  // Wrap bulk of code in script tags
+  ret = ret.
+    replace(/^([^-][\s\S]+)/m, "<script>\n$1\n</script>");
+
+  // Convert simple -script placeholders to <script> equivalent
+  ret = ret.
     replace(/^-(\w+)(.*?)\s*\{([\s\S]+)-\}.*$/gm, "\n<$1$2>$3</$1>").
     replace(/^-(\w+)(.*)$/gm, "<$1$2></$1>").
     replace(/^\s+/, '').
     replace(/\s+$/, '');
+
+  return ret;
 };
 
 Embedded.prototype.attributesFromSource = function() {

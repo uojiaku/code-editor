@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>code editor</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="editor.css">
+    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/ace/keybinding-emacs.js"></script>
+    <script src="js/rawinflate.js"></script>
+    <script src="js/rawdeflate.js"></script>
+    <script src="js/appcache.js"></script>
+  </head>
+  <body>
+<p>Lebowski ipsum i'll get you a toe by this afternoon —with nail polish. Dolor sit amet, consectetur adipiscing elit praesent ac magna. Mr. Lebowski is in seclusion in the West Wing. Justo pellentesque ac lectus quis elit blandit. WE HAVE BUNNY. GATHER ONE MILLION DOLLARS IN UNMARKED NON-CONSECUTIVE TWENTIES. AWAIT INSTRUCTIONS. NO FUNNY STUFF. Fringilla a ut turpis. It's a complicated case, Maude. Lotta ins. Lotta outs. And a lotta strands to keep in my head, man. Praesent felis ligula, malesuada suscipit malesuada non, ultrices non urna sed orci ipsum, placerat.</p>
+
+<table width="100%">
+<tr>
+<td width=50%>
+<script type="text/ice-code" id="code-001" line="20">
+-script src="http://gamingJS.com/Three.js"
+-script src="http://gamingJS.com/ChromeFixes.js"
+// This is where stuff in our game will happen:
+var scene = new THREE.Scene();
+
+// This is what sees the stuff:
+var aspect_ratio = window.innerWidth / window.innerHeight;
+var camera = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 10000);
+camera.position.z = 400;
+scene.add(camera);
+
+// This will draw what the camera sees onto the screen:
+var renderer = new THREE.CanvasRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// ******** START CODING ON THE NEXT LINE ********
+
+var shape = new THREE.SphereGeometry(100);
+var cover = new THREE.MeshNormalMaterial();
+var ball = new THREE.Mesh(shape, cover);
+scene.add(ball);
+ball.position.set(-250,250,-250);
+
+var shape = new THREE.CubeGeometry(300, 100, 20);
+var cover = new THREE.MeshNormalMaterial();
+var box = new THREE.Mesh(shape, cover);
+scene.add(box);
+box.position.set(250, 250, -250);
+
+var shape = new THREE.CylinderGeometry(110, 100, 100);
+var cover = new THREE.MeshNormalMaterial();
+var tube = new THREE.Mesh(shape, cover);
+scene.add(tube);
+tube.position.set(250, -250, -250);
+
+var shape = new THREE.PlaneGeometry(300, 100);
+var cover = new THREE.MeshNormalMaterial();
+var ground = new THREE.Mesh(shape, cover);
+scene.add(ground);
+ground.position.set(-250, -250, -250);
+
+var shape = new THREE.TorusGeometry(100, 25, 8, 25);
+var cover = new THREE.MeshNormalMaterial();
+var donut = new THREE.Mesh(shape, cover);
+scene.add(donut);
+
+// START: spin
+var clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  var t = clock.getElapsedTime();
+
+  ball.rotation.set(t, 2*t, 0);
+  box.rotation.set(t, 2*t, 0);
+  tube.rotation.set(t, 2*t, 0);
+  ground.rotation.set(t, 2*t, 0);
+  donut.rotation.set(t, 2*t, 0);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+// END: spin
+
+// Now, show what the camera sees on the screen:
+renderer.render(scene, camera);
+</script>
+</td>
+<td width=50%>
+<div id="preview-001"/>
+</td>
+</tr>
+</table>
+
+<p>One a those days, huh. Wal, a wiser fella than m'self once said, sometimes you eat the bar and sometimes the bar, wal, he eats you. Id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at dignissim magna. Walter, this isn't a First Amendment thing. Ullamcorper in aliquam sagittis massa ac tortor ultrices faucibus curabitur eu. No, look. I do mind. The Dude minds. This will not stand, you know, this aggression will not stand, man. Mi sapien, ut ultricies ipsum morbi eget risus nulla nullam vel nisi.</p>
+
+<p>I'm not Mr. Lebowski; you're Mr. Lebowski. I'm the Dude. Enim, vel auctor ante morbi. Is this yours, Larry? Is this your homework, Larry? Id urna vel felis lacinia placerat vestibulum turpis nulla, viverra nec volutpat ac. Hardly Dude, a new 'vette? The kid's still got, oh, 96 to 97 thousand, depending on the options. Ornare id lectus cras pharetra faucibus tristique nullam non accumsan justo nulla facilisi.</p>
+  </body>
+<style>
+#content { width: 600px }
+</style>
+
+  <script src="js/ice-editor.js"></script>
+  <script src="js/ice-embeded.js"></script>
+  <script>
+    new ICE.Embedded(
+      document.getElementById('code-001'),
+      {preview_el: document.getElementById('preview-001')}
+    );
+  </script>
+</html>
