@@ -55,7 +55,8 @@ Editor.prototype.getValue = function() {
 Editor.prototype.getContent = Editor.prototype.getValue;
 
 Editor.prototype.scrollToLine = function(line) {
-  this.editor.scrollToLine(line-1);
+  var that = this;
+  setTimeout(function(){that.editor.scrollToLine(line-1);},0);
 };
 
 // Toggle the display of the editor layer.
