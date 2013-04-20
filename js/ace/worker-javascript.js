@@ -1143,7 +1143,10 @@ oop.inherits(JavaScriptWorker, Mirror);
 
     this.onUpdate = function() {
         var value = this.doc.getValue();
-        value = value.replace(/^#!.*\n/, "\n");
+        value = value.replace(/^#!.*\n/, "\n").
+          replace(/^<(\w+).*?>\s*<\/\1>/gm, "").
+          replace(/^<!--.*?-->/gm, "").
+          replace(/<\/?script>/g, "");
         if (!value) {
             this.sender.emit("jslint", []);
             return;
