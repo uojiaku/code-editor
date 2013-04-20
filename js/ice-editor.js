@@ -5,7 +5,7 @@
 // ICE.Editor
 // ----------
 
-ace.config.set("workerPath", "/js/ace");
+ace.config.set("workerPath", "js/ace");
 
 // Import some helpers from the ACE Code Editor
 var UndoManager = ace.require("ace/undomanager").UndoManager;
@@ -46,7 +46,7 @@ Editor.prototype.setContent = function(data) {
   this.editor.getSession().on('change', this.handle_change);
   // Let the browser render elements before preview so that preview
   // size can be properly determined
-  setTimeout(function(){that.updatePreview();},0);
+  setTimeout(function(){that.updatePreview();},50);
 };
 
 Editor.prototype.getValue = function() {
