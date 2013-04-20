@@ -5,7 +5,7 @@
 // ICE.Editor
 // ----------
 
-ace.config.set("workerPath", "js/ace");
+ace.config.set("workerPath", "/js/ace");
 
 // Import some helpers from the ACE Code Editor
 var UndoManager = ace.require("ace/undomanager").UndoManager;
