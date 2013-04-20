@@ -5,9 +5,11 @@
 // ICE.Editor
 // ----------
 
+ace.config.set("workerPath", "/js/ace");
+
 // Import some helpers from the ACE Code Editor
-var UndoManager = require("ace/undomanager").UndoManager;
-var EmacsManager = require("ace/keyboard/emacs").handler;
+var UndoManager = ace.require("ace/undomanager").UndoManager;
+var EmacsManager = ace.require("ace/keyboard/emacs").handler;
 
 // Construct a new instance of the ICE Code Editor. The DOM element
 // supplied to the constructor must already exist.
@@ -126,7 +128,7 @@ Editor.prototype.updatePreview = function() {
 
   content.open();
   content.write(
-    "<body></body>" + 
+    "<body></body>" +
     this.editor.getValue()
   );
   content.close();
