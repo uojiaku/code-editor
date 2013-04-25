@@ -62,7 +62,9 @@ Store.prototype.createFromTemplate = function(name, template_name) {
 };
 
 Store.prototype.create = function(code, title) {
-  if (!title) title = this._nextUntitled();
+  if (!title) title = 'Untitled';
+  if (this.hasProjectNamed(title)) title = this._nextProjectNamed(title);
+
   if ( this.documents.length == 0 || this.documents[0].filename != title) {
     this.documents.unshift({
       filetype: 'text/plain',
@@ -74,20 +76,33 @@ Store.prototype.create = function(code, title) {
   this.save(code);
 };
 
-Store.prototype._nextUntitled = function() {
+Store.prototype.hasProjectNamed = function(title) {
+  return this.documents.some(function(doc) {
+      return doc.filename == title;
+    });
+};
+
+Store.prototype._nextProjectNamed = function(title) {
+  title.replace(/\s*\(\d+\)$/, '');
+
   var nums = this.documents.
     filter(function(doc) {
-      return doc.filename.match(/Untitled/);
+      return doc.filename == title ||
+             doc.filename.match(new RegExp('^' + title + ' \\(\\d+\\)$'));
     }).
     map(function(doc) {
-      return parseInt(doc.filename.replace(/Untitled\s*/, ''), 10);
+      var num = doc.filename.
+        replace(new RegExp('^' + title + '\\s*'), '').
+        replace(/[)(\\s]+/g, '');
+      return parseInt(num, 10);
     }).
     filter(function (num) {
       return !isNaN(num);
     }).
     sort();
 
-  return 'Untitled ' + (nums.length == 0 ? 1 : nums[nums.length-1] + 1);
+  var next = nums.length ? nums[nums.length-1] + 1 : 1;
+  return title + ' (' + next + ')';
 };
 
 Store.prototype.remove = function(filename) {
@@ -146,5 +161,7 @@ Store.templates = templates;
 // Export the Store class constructor on the public API.
 if (!window.ICE) ICE = {};
 ICE.Store = Store;
+ICE.encode = encode;
+ICE.decode = decode;
 
 })();

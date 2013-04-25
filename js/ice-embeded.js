@@ -15,15 +15,17 @@ function Embedded(script, options) {
   this.el = this.createEmbeddedElement();
   this.overlay = !options.preview_el;
 
+  this.attributesFromSource();
+  if (!this.title) this.title = options.title;
+
   var that = this;
   this.editor = new ICE.Editor(this.el, {
     preview_el: options.preview_el,
     onUpdate: function() {that.timeoutPreview();},
-    title: options.title
+    title: that.title
   });
   this.editor.setContent(this.sourcecode);
   this.editor.onUpdate();
-  this.attributesFromSource();
 
   if (this.line) {
     this.editor.scrollToLine(this.line);
@@ -66,6 +68,9 @@ Embedded.prototype.processSource = function() {
 
 Embedded.prototype.attributesFromSource = function() {
   this.line = this.script.attributes.line ? this.script.attributes.line.value : 0;
+  if (this.script.attributes.title) {
+    this.title = this.script.attributes.title.value;
+  }
 };
 
 // Start or reset the countdown before the preview layer will be
@@ -86,6 +91,14 @@ Embedded.prototype.addControls = function() {
   var el = document.createElement('div');
   el.className = 'icon';
   document.body.appendChild(el);
+
+  var that = this;
+  el.addEventListener('click', function() {
+    window.location = 'http://localhost:3000/' +
+      '?title=' + encodeURIComponent(that.title) +
+      '#B/' +
+      ICE.encode(that.editor.getContent());
+  });
 
   this.editor.editor_el.appendChild(el);
 

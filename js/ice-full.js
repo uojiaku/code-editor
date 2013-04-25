@@ -51,6 +51,32 @@ function applyStyles() {
   editor.preview_el.style.right = '0';
 }
 
+function processLocationHash() {
+  if (!window.location.hash) return;
+
+  var hash = window.location.hash.substr(1);
+  var version = hash.substr(0, 2);
+
+  if (version == 'A/') {
+    alert('That shared link format is no longer supported.');
+    return;
+  }
+
+  if ( version != 'B/' ) {
+    alert('That shared link format is not supported.');
+    return;
+  }
+
+  var title;
+  if (window.location.search.indexOf('title=')) {
+    title = window.location.search.substr(window.location.search.indexOf('title=') + 6);
+    title = decodeURIComponent(title);
+  }
+  store.create(ICE.decode(hash.substr(2)), title);
+  window.location.hash = '';
+  window.location.search = '';
+}
+
 // toolbar
 
 var pad = function ( number, length ) {
@@ -698,6 +724,7 @@ function attachFull() {
   store = new ICE.Store();
   editor = new ICE.Editor(el, {edit_only: EDIT_ONLY});
   applyStyles();
+  processLocationHash();
   editor.setContent(store.current.code);
 
   if (GAME_MODE) {
